@@ -1,5 +1,6 @@
 package be.mrtus.engine.domain.scene;
 
+import be.mrtus.engine.demo.domain.entity.component.SpinningEntityController;
 import be.mrtus.engine.domain.render.Model;
 import be.mrtus.engine.domain.render.Texture;
 import be.mrtus.engine.domain.scene.entity.Entity;
@@ -11,8 +12,8 @@ import java.util.Map;
 
 public class Scene {
 
-	private List<Entity> entities = new ArrayList<>();
-	private final Entity entity;
+	private final List<Entity> entities = new ArrayList<>();
+	private final List<Entity> newEntities = new ArrayList<>();
 	private final Map<Model, List<Entity>> entityModels = new HashMap<>();
 
 	public Map<Model, List<Entity>> getEntityModels() {
@@ -108,29 +109,33 @@ public class Scene {
 			// Back face
 			7, 6, 4, 7, 4, 5
 		};
-		this.entity = new Entity.Builder()
+		this.addEntity(new Entity.Builder()
 				.model(new Model(positions, textCoords, indices, new Texture()))
 				.transform(new Transform.Builder().position(0f, 0f, -2.5f).build())
-				.build();
-		this.addEntity(this.entity);
+				.controller(new SpinningEntityController(5f))
+				.build());
 	}
 
 	public void addEntity(Entity entity) {
-		List<Entity> ents = this.entityModels.get(entity.getModel());
-		if(ents == null) {
-			ents = new ArrayList<>();
-			this.entityModels.put(entity.getModel(), ents);
-		}
-		ents.add(entity);
-		this.entities.add(entity);
+		this.newEntities.add(entity);
+	}
+
+	private void addNewEntities(List<Entity> entities) {
+		entities.forEach(entity -> {
+			List<Entity> ents = this.entityModels.get(entity.getModel());
+			if(ents == null) {
+				ents = new ArrayList<>();
+				this.entityModels.put(entity.getModel(), ents);
+			}
+			ents.add(entity);
+			this.entities.add(entity);
+		});
 	}
 
 	public void update() {
-		Transform transform = this.entity.getTransform();
-		float rotation = transform.getRotation().x - 1.0f;
-		if(rotation > 360) {
-			rotation = 0;
-		}
-		transform.getRotation().set(rotation, rotation, 0);
+		this.addNewEntities(new ArrayList<>(this.newEntities));
+		this.newEntities.clear();
+
+		this.entities.forEach(Entity::update);
 	}
 }
