@@ -1,10 +1,10 @@
 package be.mrtus.engine.demo.domain.render;
 
 import be.mrtus.engine.domain.Display;
+import be.mrtus.engine.domain.Game;
 import be.mrtus.engine.domain.render.Mesh;
 import be.mrtus.engine.domain.render.shader.ShaderProgram;
 import be.mrtus.engine.domain.scene.entity.Entity;
-import be.mrtus.engine.domain.scene.entity.component.Model;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.joml.Matrix4f;
@@ -16,12 +16,13 @@ public class Renderer {
 	private final float Z_FAR = 1000.f;
 	private final float Z_NEAR = 0.01f;
 	private final Display display;
-	private Entity entity;
+	private final Game game;
 	private ShaderProgram shaderProgram;
 	private final Transformation transformation;
 
-	public Renderer(Display display) {
+	public Renderer(Display display, Game game) {
 		this.display = display;
+		this.game = game;
 		this.transformation = new Transformation();
 	}
 
@@ -42,11 +43,6 @@ public class Renderer {
 		this.shaderProgram.link();
 		this.shaderProgram.createUniform("projectionMatrix");
 		this.shaderProgram.createUniform("worldMatrix");
-
-		float[] positions = new float[]{-0.5f, 0.5f, -1.05f, -0.5f, -0.5f, -1.05f, 0.5f, -0.5f, -1.05f, 0.5f, 0.5f, -1.05f,};
-		int[] indices = new int[]{0, 1, 3, 3, 1, 2,};
-		float[] colours = new float[]{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.5f, 0.5f,};
-		this.entity = new Entity.Builder().model(new Model(new Mesh(positions, colours, indices))).build();
 	}
 
 	public String loadResource(String fileName) throws Exception {
@@ -59,20 +55,22 @@ public class Renderer {
 			GL11.glViewport(0, 0, this.display.getWidth(), this.display.getHeight());
 			this.display.setResized(false);
 		}
-		this.renderEntity(this.entity);
+		this.renderEntity(this.game.getEntity());
 	}
 
 	public void renderEntity(Entity entity) {
 		this.shaderProgram.bind();
+
 		Matrix4f projectionMatrix = this.transformation.getProjectionMatrix(this.FOV, this.display.getWidth(), this.display.getHeight(), this.Z_NEAR, this.Z_FAR);
 		this.shaderProgram.setUniform("projectionMatrix", projectionMatrix);
 
-		Matrix4f worldMatrix = this.transformation.getWorldMatrix(entity.getTransform());
-		this.shaderProgram.setUniform("worldMatrix", worldMatrix);
-
 		Mesh mesh = entity.getMesh();
 		mesh.startRender();
+
+		Matrix4f worldMatrix = this.transformation.getWorldMatrix(entity.getTransform());
+		this.shaderProgram.setUniform("worldMatrix", worldMatrix);
 		mesh.render();
+
 		mesh.endRender();
 
 		this.shaderProgram.unbind();

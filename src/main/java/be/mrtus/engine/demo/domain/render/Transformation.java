@@ -28,7 +28,7 @@ public class Transformation {
 		this.worldMatrix.rotateX((float)Math.toRadians(rotation.x));
 		this.worldMatrix.rotateY((float)Math.toRadians(rotation.y));
 		this.worldMatrix.rotateZ((float)Math.toRadians(rotation.z));
-		this.worldMatrix.scale(transform.getScale());
+		this.worldMatrix.scale(1f);
 		return this.worldMatrix;
 	}
 }

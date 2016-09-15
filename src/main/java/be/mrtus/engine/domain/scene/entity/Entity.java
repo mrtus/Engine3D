@@ -65,10 +65,6 @@ public class Entity {
 //	public boolean isMovable() {
 //		return this.transform instanceof MovableTransform;
 //	}
-	public void render(float alpha) {
-		this.model.render(alpha);
-	}
-
 	public Mesh getMesh() {
 		return this.model.getMesh();
 	}

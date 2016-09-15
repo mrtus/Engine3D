@@ -47,7 +47,11 @@ public class Mesh {
 	}
 
 	public Mesh() {
-		throw new UnsupportedOperationException("Not supported yet.");
+		this.colourVboId = 0;
+		this.indexVboId = 0;
+		this.vaoId = 0;
+		this.vboId = 0;
+		this.vertexCount = 0;
 	}
 
 	public void destroy() {

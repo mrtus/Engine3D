@@ -26,9 +26,6 @@ public class Model<T extends Entity> {
 		this.transform = transform;
 	}
 
-	public void render(float alpha) {
-	}
-
 	public void update() {
 	}
 }
