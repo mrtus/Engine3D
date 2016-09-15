@@ -31,7 +31,7 @@ public class DemoGame implements Game, KeyListener {
 		this.keyboard = keyboard;
 		this.mouse = mouse;
 		this.keyboard.addKeyListener(this);
-		this.renderer = new Renderer();
+		this.renderer = new Renderer(this.display);
 		this.renderer.init();
 	}
 
@@ -44,7 +44,7 @@ public class DemoGame implements Game, KeyListener {
 
 	@Override
 	public void render(float alpha) {
-		this.renderer.render(this.display, alpha);
+		this.renderer.render(alpha);
 	}
 
 	@Override

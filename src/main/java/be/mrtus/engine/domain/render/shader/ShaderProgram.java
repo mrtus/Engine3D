@@ -1,11 +1,17 @@
 package be.mrtus.engine.domain.render.shader;
 
+import java.nio.FloatBuffer;
+import java.util.HashMap;
+import java.util.Map;
+import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
 public class ShaderProgram {
 
 	private int fragmentId;
 	private final int programId;
+	private final Map<String, Integer> uniforms = new HashMap();
 	private int vertexId;
 
 	public ShaderProgram() throws Exception {
@@ -20,11 +26,19 @@ public class ShaderProgram {
 	}
 
 	public void createFragmentShader(String shaderCode) throws Exception {
-		this.fragmentId = createShader(shaderCode, GL20.GL_FRAGMENT_SHADER);
+		this.fragmentId = this.createShader(shaderCode, GL20.GL_FRAGMENT_SHADER);
+	}
+
+	public void createUniform(String uniformName) throws Exception {
+		int uniformLocation = GL20.glGetUniformLocation(this.programId, uniformName);
+		if(uniformLocation < 0) {
+			throw new Exception("Could not create uniform: " + uniformName);
+		}
+		this.uniforms.put(uniformName, uniformLocation);
 	}
 
 	public void createVertexShader(String shaderCode) throws Exception {
-		this.vertexId = createShader(shaderCode, GL20.GL_VERTEX_SHADER);
+		this.vertexId = this.createShader(shaderCode, GL20.GL_VERTEX_SHADER);
 	}
 
 	public void destroy() {
@@ -51,6 +65,12 @@ public class ShaderProgram {
 			System.err.println("Warning validating Shader code: " + GL20.glGetShaderInfoLog(this.programId, 1024));
 		}
 
+	}
+
+	public void setUniform(String uniformName, Matrix4f value) {
+		FloatBuffer fb = BufferUtils.createFloatBuffer(16);
+		value.get(fb);
+		GL20.glUniformMatrix4fv(this.uniforms.get(uniformName), false, fb);
 	}
 
 	public void unbind() {
