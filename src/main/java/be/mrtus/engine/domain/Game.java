@@ -1,22 +1,21 @@
 package be.mrtus.engine.domain;
 
+import be.mrtus.engine.domain.scene.Scene;
 import be.mrtus.engine.domain.input.Keyboard;
 import be.mrtus.engine.domain.input.Mouse;
 import be.mrtus.engine.domain.scene.Camera;
-import be.mrtus.engine.domain.scene.entity.Entity;
 
 public interface Game {
 
+	public void destroy();
+
 	public Camera getCamera();
 
-	public Entity getEntity();
+	public Scene getScene();
 
 	public void init(Display display, Keyboard keyboard, Mouse mouse) throws Exception;
 
-	public void update();
-
 	public void render(float alpha);
 
-	public void destroy();
-
+	public void update();
 }

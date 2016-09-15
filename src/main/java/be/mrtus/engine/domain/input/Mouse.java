@@ -5,13 +5,11 @@ import java.nio.DoubleBuffer;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWCursorEnterCallback;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 
 public class Mouse {
 
 	private final Vector2f currentPos;
-	private GLFWCursorEnterCallback cursorEnterCallback;
 	private GLFWCursorPosCallback cursorPostCallback;
 	private final Vector2f deltaPos;
 	private final Display display;
@@ -25,7 +23,6 @@ public class Mouse {
 
 	public void destroy() {
 		this.cursorPostCallback.release();
-		this.cursorEnterCallback.release();
 	}
 
 	public Vector2f getDeltaPos() {

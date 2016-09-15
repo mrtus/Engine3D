@@ -11,8 +11,7 @@ public class CameraController extends EntityController<Camera> {
 
 	private final Keyboard keyboard;
 	private final Mouse mouse;
-
-	private Vector3f moveInc = new Vector3f();
+	private final Vector3f move = new Vector3f();
 
 	public CameraController(Keyboard keyboard, Mouse mouse) {
 		this.keyboard = keyboard;
@@ -45,22 +44,22 @@ public class CameraController extends EntityController<Camera> {
 		Vector2f deltaPos = this.mouse.getDeltaPos();
 		this.moveRotation(deltaPos.x, deltaPos.y, 0);
 
-		this.moveInc.set(0, 0, 0);
+		this.move.set(0, 0, 0);
 		if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_W)) {
-			this.moveInc.z = -1;
+			this.move.z = -1;
 		} else if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_S)) {
-			this.moveInc.z = 1;
+			this.move.z = 1;
 		}
 		if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_A)) {
-			this.moveInc.x = -1;
+			this.move.x = -1;
 		} else if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_D)) {
-			this.moveInc.x = 1;
+			this.move.x = 1;
 		}
-		if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-			this.moveInc.y = -1;
+		if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL)) {
+			this.move.y = -1;
 		} else if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
-			this.moveInc.y = 1;
+			this.move.y = 1;
 		}
-		this.movePosition(this.moveInc.x * 0.1f, this.moveInc.y * 0.1f, this.moveInc.z * 0.1f);
+		this.movePosition(this.move.x * 0.1f, this.move.y * 0.1f, this.move.z * 0.1f);
 	}
 }

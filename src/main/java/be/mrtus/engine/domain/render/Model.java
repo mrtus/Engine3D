@@ -1,11 +1,12 @@
 package be.mrtus.engine.domain.render;
 
+import be.mrtus.engine.domain.render.Texture;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 
-public class Mesh {
+public class Model {
 
 	private final int colourVboId;
 	private final int indexVboId;
@@ -14,7 +15,7 @@ public class Mesh {
 	private final int vboId;
 	private final int vertexCount;
 
-	public Mesh(float[] positions, float[] textCoords, int[] indices, Texture texture) {
+	public Model(float[] positions, float[] textCoords, int[] indices, Texture texture) {
 		this.texture = texture;
 		this.vertexCount = indices.length;
 		FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(positions.length);
@@ -45,7 +46,7 @@ public class Mesh {
 		GL30.glBindVertexArray(0);
 	}
 
-	public Mesh() {
+	public Model() {
 		this.colourVboId = 0;
 		this.indexVboId = 0;
 		this.vaoId = 0;

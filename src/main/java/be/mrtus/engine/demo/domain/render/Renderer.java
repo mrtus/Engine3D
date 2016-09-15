@@ -1,12 +1,15 @@
 package be.mrtus.engine.demo.domain.render;
 
+import be.mrtus.engine.domain.scene.Scene;
 import be.mrtus.engine.domain.Display;
-import be.mrtus.engine.domain.Game;
-import be.mrtus.engine.domain.render.Mesh;
+import be.mrtus.engine.domain.render.Model;
 import be.mrtus.engine.domain.render.shader.ShaderProgram;
+import be.mrtus.engine.domain.scene.Camera;
 import be.mrtus.engine.domain.scene.entity.Entity;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
@@ -15,14 +18,10 @@ public class Renderer {
 	private final float FOV = (float)Math.toRadians(60.0f);
 	private final float Z_FAR = 1000.f;
 	private final float Z_NEAR = 0.01f;
-	private final Display display;
-	private final Game game;
 	private ShaderProgram shaderProgram;
 	private final Transformation transformation;
 
-	public Renderer(Display display, Game game) {
-		this.display = display;
-		this.game = game;
+	public Renderer() {
 		this.transformation = new Transformation();
 	}
 
@@ -50,33 +49,41 @@ public class Renderer {
 		return new String(Files.readAllBytes(Paths.get(Renderer.class.getResource(fileName).toURI())));
 	}
 
-	public void render(float alpha) {
+	public void render(Display display, Camera camera, Scene scene, float alpha) {
 		this.clear();
-		if(this.display.isResized()) {
-			GL11.glViewport(0, 0, this.display.getWidth(), this.display.getHeight());
-			this.display.setResized(false);
+
+		if(display.isResized()) {
+			GL11.glViewport(0, 0, display.getWidth(), display.getHeight());
+			display.setResized(false);
 		}
-		this.renderEntity(this.game.getEntity());
+
+		Matrix4f projectionMatrix = this.transformation.getProjectionMatrix(this.FOV, display.getWidth(), display.getHeight(), this.Z_NEAR, this.Z_FAR);
+		Matrix4f viewMatrix = this.transformation.getViewMatrix(camera);
+		this.renderScene(scene, projectionMatrix, viewMatrix);
 	}
 
-	public void renderEntity(Entity entity) {
+	public void renderModel(Model model, List<Entity> entities, Matrix4f viewMatrix) {
+		this.shaderProgram.setUniform("texture_sampler", 0);
+
+		model.startRender();
+		entities.forEach(entity -> {
+			Matrix4f modelViewMatrix = this.transformation.getModelViewMatrix(entity.getTransform(), viewMatrix);
+			this.shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+			model.render();
+		});
+		model.endRender();
+	}
+
+	private void renderScene(Scene scene, Matrix4f projectionMatrix, Matrix4f viewMatrix) {
 		this.shaderProgram.bind();
 
-		Matrix4f projectionMatrix = this.transformation.getProjectionMatrix(this.FOV, this.display.getWidth(), this.display.getHeight(), this.Z_NEAR, this.Z_FAR);
 		this.shaderProgram.setUniform("projectionMatrix", projectionMatrix);
 
-		Matrix4f viewMatrix = this.transformation.getViewMatrix(this.game.getCamera());
+//		GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_LINE);
+		Map<Model, List<Entity>> modelEntities = scene.getEntityModels();
+		modelEntities.forEach((model, entities) -> this.renderModel(model, entities, viewMatrix));
 
-		Mesh mesh = entity.getMesh();
-		mesh.startRender();
-
-		Matrix4f modelViewMatrix = this.transformation.getModelViewMatrix(entity.getTransform(), viewMatrix);
-		this.shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-		this.shaderProgram.setUniform("texture_sampler", 0);
-		mesh.render();
-
-		mesh.endRender();
-
+//		GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_FILL);
 		this.shaderProgram.unbind();
 	}
 }

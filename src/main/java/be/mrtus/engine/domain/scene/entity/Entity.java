@@ -1,8 +1,7 @@
 package be.mrtus.engine.domain.scene.entity;
 
-import be.mrtus.engine.domain.render.Mesh;
+import be.mrtus.engine.domain.render.Model;
 import be.mrtus.engine.domain.scene.entity.component.EntityController;
-import be.mrtus.engine.domain.scene.entity.component.Model;
 import be.mrtus.engine.domain.scene.entity.component.Transform;
 import org.joml.Vector3f;
 
@@ -37,7 +36,6 @@ public class Entity {
 	public void setModel(Model model) {
 		if(model != null) {
 			this.model = model;
-			this.model.setEntity(this);
 		}
 	}
 
@@ -61,29 +59,25 @@ public class Entity {
 		if(transform != null) {
 			this.transform = transform;
 			this.transform.setEntity(this);
-			if(this.model != null) {
-				this.model.setTransform(this.transform);
-			}
 		}
 	}
 
 //	public boolean isMovable() {
 //		return this.transform instanceof MovableTransform;
 //	}
-	public Mesh getMesh() {
-		return this.model.getMesh();
+	public Model getModel() {
+		return this.model;
 	}
 
 	public void update() {
 		this.controller.update();
 		this.transform.update();
-		this.model.update();
 	}
 
 	public static class Builder<B extends Builder> {
 
 		private EntityController controller = new EntityController();
-		private Model model = new Model(new Mesh());
+		private Model model = new Model();
 		private Transform transform;
 
 		public Entity build() {
