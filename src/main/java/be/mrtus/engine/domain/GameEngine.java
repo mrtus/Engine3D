@@ -28,9 +28,7 @@ public class GameEngine implements Runnable, KeyListener {
 	@Override
 	public void keyPressed(int key, int action, int modifier) {
 		if(key == GLFW.GLFW_KEY_F11 && action == GLFW.GLFW_RELEASE) {
-			this.display.toggleFullscreen();
-			this.destroyInput();
-			this.initInput();
+			this.toggleFullscreen();
 		}
 	}
 
@@ -92,6 +90,12 @@ public class GameEngine implements Runnable, KeyListener {
 		this.game.render(alpha);
 		this.timer.updateFPS();
 		this.display.update();
+	}
+
+	private void toggleFullscreen() {
+		this.display.toggleFullscreen();
+		this.destroyInput();
+		this.initInput();
 	}
 
 	private void update() {

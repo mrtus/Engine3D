@@ -1,6 +1,5 @@
 package be.mrtus.engine.demo;
 
-import be.mrtus.engine.domain.scene.Scene;
 import be.mrtus.engine.demo.domain.render.Renderer;
 import be.mrtus.engine.domain.Display;
 import be.mrtus.engine.domain.Game;
@@ -9,6 +8,7 @@ import be.mrtus.engine.domain.input.KeyListener;
 import be.mrtus.engine.domain.input.Keyboard;
 import be.mrtus.engine.domain.input.Mouse;
 import be.mrtus.engine.domain.scene.Camera;
+import be.mrtus.engine.domain.scene.Scene;
 import org.lwjgl.glfw.GLFW;
 
 public class DemoGame implements Game, KeyListener {

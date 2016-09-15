@@ -1,6 +1,5 @@
 package be.mrtus.engine.domain.scene;
 
-import be.mrtus.engine.demo.domain.entity.component.SpinningEntityController;
 import be.mrtus.engine.demo.domain.render.model.CubeModel;
 import be.mrtus.engine.domain.render.Model;
 import be.mrtus.engine.domain.scene.entity.Entity;
@@ -16,11 +15,25 @@ public class Scene {
 	private final Map<Model, List<Entity>> entityModels = new HashMap<>();
 
 	public Scene() {
-		this.addEntity(new Entity.Builder()
-				.model(new CubeModel())
-				.transform(new Transform.Builder().position(0f, 0f, -2.5f).build())
-				.controller(new SpinningEntityController(5f))
-				.build());
+		float x;
+		float y = 0;
+		Model cubeModel = new CubeModel();
+		int value = 100;
+		double pow = Math.pow(value, 2);
+		System.out.println("Creating " + pow + " entities!");
+		for (int i = 0; i < pow; i++) {
+			x = i % value;
+			if(i % value == 0) {
+				y += 1;
+			}
+			this.addEntity(new Entity.Builder()
+					.model(cubeModel)
+					.transform(new Transform.Builder()
+							.position(x, 0f, -y - 2.5f)
+							.build())
+					//					.controller(new SpinningEntityController(0.2f * x + 1))
+					.build());
+		}
 	}
 
 	public void addEntity(Entity entity) {
