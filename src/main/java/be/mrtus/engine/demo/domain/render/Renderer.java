@@ -42,7 +42,8 @@ public class Renderer {
 		this.shaderProgram.createFragmentShader(this.loadResource("/shaders/fragment.fs"));
 		this.shaderProgram.link();
 		this.shaderProgram.createUniform("projectionMatrix");
-		this.shaderProgram.createUniform("worldMatrix");
+		this.shaderProgram.createUniform("modelViewMatrix");
+		this.shaderProgram.createUniform("texture_sampler");
 	}
 
 	public String loadResource(String fileName) throws Exception {
@@ -64,11 +65,14 @@ public class Renderer {
 		Matrix4f projectionMatrix = this.transformation.getProjectionMatrix(this.FOV, this.display.getWidth(), this.display.getHeight(), this.Z_NEAR, this.Z_FAR);
 		this.shaderProgram.setUniform("projectionMatrix", projectionMatrix);
 
+		Matrix4f viewMatrix = this.transformation.getViewMatrix(this.game.getCamera());
+
 		Mesh mesh = entity.getMesh();
 		mesh.startRender();
 
-		Matrix4f worldMatrix = this.transformation.getWorldMatrix(entity.getTransform());
-		this.shaderProgram.setUniform("worldMatrix", worldMatrix);
+		Matrix4f modelViewMatrix = this.transformation.getModelViewMatrix(entity.getTransform(), viewMatrix);
+		this.shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+		this.shaderProgram.setUniform("texture_sampler", 0);
 		mesh.render();
 
 		mesh.endRender();

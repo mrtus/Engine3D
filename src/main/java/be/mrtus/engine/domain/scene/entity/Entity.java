@@ -11,6 +11,7 @@ public class Entity {
 	protected EntityController controller;
 	protected Model model;
 	protected Transform transform;
+	protected double mass = 0.0;
 
 	protected Entity() {
 		this(new Entity.Builder());
@@ -27,6 +28,10 @@ public class Entity {
 			this.controller = controller;
 			this.controller.setEntity(this);
 		}
+	}
+
+	public double getMass() {
+		return this.mass;
 	}
 
 	public void setModel(Model model) {

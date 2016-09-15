@@ -73,6 +73,10 @@ public class ShaderProgram {
 		GL20.glUniformMatrix4fv(this.uniforms.get(uniformName), false, fb);
 	}
 
+	public void setUniform(String uniformName, int value) {
+		GL20.glUniform1i(uniforms.get(uniformName), value);
+	}
+
 	public void unbind() {
 		GL20.glUseProgram(0);
 	}
