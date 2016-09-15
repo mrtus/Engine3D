@@ -13,6 +13,11 @@ public class Camera extends Entity {
 				.controller(new CameraController(keyboard, mouse)));
 	}
 
+	@Override
+	public void update() {
+		this.controller.update();
+	}
+
 	public void reset() {
 		this.setTransform(new MovableTransform.Builder().build());
 	}

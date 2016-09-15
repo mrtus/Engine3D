@@ -1,7 +1,9 @@
 package be.mrtus.engine.domain.input;
 
 import be.mrtus.engine.domain.Display;
+import java.nio.DoubleBuffer;
 import org.joml.Vector2f;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorEnterCallback;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
@@ -15,6 +17,7 @@ public class Mouse {
 	private final Vector2f deltaPos;
 	private final Display display;
 	private boolean inWindow = false;
+	private boolean mouseGrabbed;
 	private final Vector2f previousPos;
 
 	public Mouse(Display display) {
@@ -65,12 +68,42 @@ public class Mouse {
 	}
 
 	public void update() {
-		if(this.previousPos.x > 0 && this.previousPos.y > 0 && this.inWindow) {
-			this.deltaPos.x = this.currentPos.x - this.previousPos.x;
-			this.deltaPos.y = this.currentPos.y - this.previousPos.y;
+		this.deltaPos.x = 0;
+		this.deltaPos.y = 0;
+
+		if(this.isLeftButtonPressed()) {
+			this.setMouseGrabbed(true);
+			GLFW.glfwSetCursorPos(this.display.getDisplayId(), this.display.getWidth() / 2, this.display.getHeight() / 2);
 		}
-		this.previousPos.x = this.currentPos.x;
-		this.previousPos.y = this.currentPos.y;
+		if(this.mouseGrabbed) {
+			DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
+			DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
+
+			GLFW.glfwGetCursorPos(this.display.getDisplayId(), x, y);
+			x.rewind();
+			y.rewind();
+
+			this.currentPos.x = (float)x.get();
+			this.currentPos.y = (float)y.get();
+			this.deltaPos.x = this.currentPos.x - this.display.getWidth() / 2;
+			this.deltaPos.y = this.currentPos.y - this.display.getHeight() / 2;
+			GLFW.glfwSetCursorPos(this.display.getDisplayId(), this.display.getWidth() / 2, this.display.getHeight() / 2);
+		} else {
+			;
+		}
+	}
+
+	private boolean isMouseGrabbed() {
+		return this.mouseGrabbed;
+	}
+
+	public void setMouseGrabbed(boolean b) {
+		this.mouseGrabbed = b;
+		if(b) {
+			GLFW.glfwSetInputMode(this.display.getDisplayId(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
+		} else {
+			GLFW.glfwSetInputMode(this.display.getDisplayId(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+		}
 	}
 
 	private void onMouseEnteredWindow(int entered) {
@@ -78,7 +111,7 @@ public class Mouse {
 	}
 
 	private void onMouseMoved(float xpos, float ypos) {
-		this.currentPos.x = xpos;
-		this.currentPos.y = ypos;
+//		this.currentPos.x = xpos;
+//		this.currentPos.y = ypos;
 	}
 }

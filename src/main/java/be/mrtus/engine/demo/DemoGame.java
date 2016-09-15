@@ -147,7 +147,8 @@ public class DemoGame implements Game, KeyListener {
 	@Override
 	public void keyPressed(int key, int action, int modifier) {
 		if(key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE) {
-			this.display.closeWindow();
+//			this.display.closeWindow();
+			this.mouse.setMouseGrabbed(false);
 		}
 	}
 
