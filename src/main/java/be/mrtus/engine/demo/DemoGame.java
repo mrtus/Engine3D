@@ -158,6 +158,9 @@ public class DemoGame implements Game, KeyListener {
 
 	@Override
 	public void update() {
+		if(this.mouse.isLeftButtonPressed() && !this.mouse.isMouseGrabbed()) {
+			this.mouse.setMouseGrabbed(true);
+		}
 		this.camera.update();
 		Transform transform = this.entity.getTransform();
 		float rotation = transform.getRotation().x - 1.0f;

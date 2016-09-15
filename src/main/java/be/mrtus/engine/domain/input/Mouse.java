@@ -7,7 +7,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorEnterCallback;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
-import org.lwjgl.opengl.GL11;
 
 public class Mouse {
 
@@ -16,13 +15,10 @@ public class Mouse {
 	private GLFWCursorPosCallback cursorPostCallback;
 	private final Vector2f deltaPos;
 	private final Display display;
-	private boolean inWindow = false;
 	private boolean mouseGrabbed;
-	private final Vector2f previousPos;
 
 	public Mouse(Display display) {
 		this.display = display;
-		this.previousPos = new Vector2f(-1f, -1f);
 		this.currentPos = new Vector2f(0, 0);
 		this.deltaPos = new Vector2f(0, 0);
 	}
@@ -43,12 +39,6 @@ public class Mouse {
 				onMouseMoved((float)xpos, (float)ypos);
 			}
 		});
-		GLFW.glfwSetCursorEnterCallback(this.display.getDisplayId(), this.cursorEnterCallback = new GLFWCursorEnterCallback() {
-			@Override
-			public void invoke(long window, int entered) {
-				onMouseEnteredWindow(entered);
-			}
-		});
 	}
 
 	public boolean isLeftButtonPressed() {
@@ -63,6 +53,20 @@ public class Mouse {
 		return GLFW.glfwGetMouseButton(this.display.getDisplayId(), button) == GLFW.GLFW_PRESS;
 	}
 
+	public boolean isMouseGrabbed() {
+		return this.mouseGrabbed;
+	}
+
+	public void setMouseGrabbed(boolean b) {
+		this.mouseGrabbed = b;
+		if(b) {
+			GLFW.glfwSetInputMode(this.display.getDisplayId(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
+			GLFW.glfwSetCursorPos(this.display.getDisplayId(), this.display.getWidth() / 2, this.display.getHeight() / 2);
+		} else {
+			GLFW.glfwSetInputMode(this.display.getDisplayId(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+		}
+	}
+
 	public boolean isRightButtonPressed() {
 		return this.isMouseButtonPressed(GLFW.GLFW_MOUSE_BUTTON_RIGHT);
 	}
@@ -71,10 +75,6 @@ public class Mouse {
 		this.deltaPos.x = 0;
 		this.deltaPos.y = 0;
 
-		if(this.isLeftButtonPressed()) {
-			this.setMouseGrabbed(true);
-			GLFW.glfwSetCursorPos(this.display.getDisplayId(), this.display.getWidth() / 2, this.display.getHeight() / 2);
-		}
 		if(this.isMouseGrabbed()) {
 			DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
 			DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
@@ -91,25 +91,10 @@ public class Mouse {
 		}
 	}
 
-	public boolean isMouseGrabbed() {
-		return this.mouseGrabbed;
-	}
-
-	public void setMouseGrabbed(boolean b) {
-		this.mouseGrabbed = b;
-		if(b) {
-			GLFW.glfwSetInputMode(this.display.getDisplayId(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
-		} else {
-			GLFW.glfwSetInputMode(this.display.getDisplayId(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
-		}
-	}
-
-	private void onMouseEnteredWindow(int entered) {
-		this.inWindow = (entered == GL11.GL_TRUE);
-	}
-
 	private void onMouseMoved(float xpos, float ypos) {
-//		this.currentPos.x = xpos;
-//		this.currentPos.y = ypos;
+		if(!this.isMouseGrabbed()) {
+			this.currentPos.x = xpos;
+			this.currentPos.y = ypos;
+		}
 	}
 }
