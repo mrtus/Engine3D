@@ -8,7 +8,6 @@ import org.joml.Vector3f;
 public class Entity {
 
 	protected EntityController controller;
-	protected double mass;
 	protected Model model;
 	protected Transform transform;
 
@@ -18,7 +17,6 @@ public class Entity {
 
 	protected Entity(Builder builder) {
 		this.setController(builder.controller);
-		this.setMass(builder.mass);
 		this.setModel(builder.model);
 		this.setTransform(builder.transform);
 	}
@@ -28,14 +26,6 @@ public class Entity {
 			this.controller = controller;
 			this.controller.setEntity(this);
 		}
-	}
-
-	public double getMass() {
-		return this.mass;
-	}
-
-	public void setMass(double mass) {
-		this.mass = mass;
 	}
 
 	public void setModel(Model model) {
@@ -87,7 +77,6 @@ public class Entity {
 	public static class Builder<B extends Builder> {
 
 		private EntityController controller = new EntityController();
-		private double mass = 0;
 		private Model model = new Model();
 		private Transform transform;
 
@@ -97,11 +86,6 @@ public class Entity {
 
 		public B controller(EntityController controller) {
 			this.controller = controller;
-			return (B)this;
-		}
-
-		public B mass(double mass) {
-			this.mass = mass;
 			return (B)this;
 		}
 
