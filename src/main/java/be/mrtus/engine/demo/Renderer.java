@@ -1,9 +1,10 @@
 package be.mrtus.engine.demo;
 
 import be.mrtus.engine.domain.Display;
-import be.mrtus.engine.domain.Utils;
 import be.mrtus.engine.domain.render.Mesh;
 import be.mrtus.engine.domain.render.shader.ShaderProgram;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -24,10 +25,14 @@ public class Renderer {
 		this.mesh.destroy();
 	}
 
+	public String loadResource(String fileName) throws Exception {
+		return new String(Files.readAllBytes(Paths.get(Renderer.class.getResource(fileName).toURI())));
+	}
+
 	public void init() throws Exception {
 		this.shaderProgram = new ShaderProgram();
-		this.shaderProgram.createVertexShader(Utils.loadResource("/shaders/vertex.vs"));
-		this.shaderProgram.createFragmentShader(Utils.loadResource("/shaders/fragment.fs"));
+		this.shaderProgram.createVertexShader(this.loadResource("/shaders/vertex.vs"));
+		this.shaderProgram.createFragmentShader(this.loadResource("/shaders/fragment.fs"));
 		this.shaderProgram.link();
 
 		float[] positions = new float[]{-0.5f, 0.5f, 0.0f, -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f,};
