@@ -46,6 +46,10 @@ public class Mesh {
 		GL30.glBindVertexArray(0);
 	}
 
+	public Mesh() {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+
 	public void destroy() {
 		GL20.glDisableVertexAttribArray(0);
 
@@ -57,11 +61,19 @@ public class Mesh {
 		GL30.glDeleteVertexArrays(this.vaoId);
 	}
 
-	public int getVaoId() {
-		return this.vaoId;
+	public void endRender() {
+		GL20.glDisableVertexAttribArray(1);
+		GL20.glDisableVertexAttribArray(0);
+		GL30.glBindVertexArray(0);
 	}
 
-	public int getVertexCount() {
-		return this.vertexCount;
+	public void render() {
+		GL11.glDrawElements(GL11.GL_TRIANGLES, this.vertexCount, GL11.GL_UNSIGNED_INT, 0);
+	}
+
+	public void startRender() {
+		GL30.glBindVertexArray(this.vaoId);
+		GL20.glEnableVertexAttribArray(0);
+		GL20.glEnableVertexAttribArray(1);
 	}
 }

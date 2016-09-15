@@ -1,5 +1,6 @@
 package be.mrtus.engine.domain.scene.entity;
 
+import be.mrtus.engine.domain.render.Mesh;
 import be.mrtus.engine.domain.scene.entity.component.EntityController;
 import be.mrtus.engine.domain.scene.entity.component.Model;
 import be.mrtus.engine.domain.scene.entity.component.Transform;
@@ -68,6 +69,10 @@ public class Entity {
 		this.model.render(alpha);
 	}
 
+	public Mesh getMesh() {
+		return this.model.getMesh();
+	}
+
 	public void update() {
 		this.controller.update();
 		this.transform.update();
@@ -77,7 +82,7 @@ public class Entity {
 	public static class Builder<B extends Builder> {
 
 		private EntityController controller = new EntityController();
-		private Model model = new Model();
+		private Model model = new Model(new Mesh());
 		private Transform transform;
 
 		public Entity build() {

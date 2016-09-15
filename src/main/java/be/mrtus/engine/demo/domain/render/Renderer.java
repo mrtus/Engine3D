@@ -1,14 +1,14 @@
-package be.mrtus.engine.demo;
+package be.mrtus.engine.demo.domain.render;
 
 import be.mrtus.engine.domain.Display;
 import be.mrtus.engine.domain.render.Mesh;
 import be.mrtus.engine.domain.render.shader.ShaderProgram;
+import be.mrtus.engine.domain.scene.entity.Entity;
+import be.mrtus.engine.domain.scene.entity.component.Model;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
 
 public class Renderer {
 
@@ -16,12 +16,13 @@ public class Renderer {
 	private final float Z_FAR = 1000.f;
 	private final float Z_NEAR = 0.01f;
 	private final Display display;
-	private Mesh mesh;
-	private Matrix4f projectionMatrix;
+	private Entity entity;
 	private ShaderProgram shaderProgram;
+	private final Transformation transformation;
 
 	public Renderer(Display display) {
 		this.display = display;
+		this.transformation = new Transformation();
 	}
 
 	public void clear() {
@@ -32,26 +33,20 @@ public class Renderer {
 		if(this.shaderProgram != null) {
 			this.shaderProgram.destroy();
 		}
-		this.mesh.destroy();
 	}
 
 	public void init() throws Exception {
-		this.projectionMatrix = new Matrix4f().perspective(this.FOV, (float)this.display.getWidth() / this.display.getHeight(), this.Z_NEAR, this.Z_FAR);
-
 		this.shaderProgram = new ShaderProgram();
 		this.shaderProgram.createVertexShader(this.loadResource("/shaders/vertex.vs"));
 		this.shaderProgram.createFragmentShader(this.loadResource("/shaders/fragment.fs"));
 		this.shaderProgram.link();
 		this.shaderProgram.createUniform("projectionMatrix");
+		this.shaderProgram.createUniform("worldMatrix");
 
-		float[] positions = new float[]{
-			-0.5f, 0.5f, -1.05f,
-			-0.5f, -0.5f, -1.05f,
-			0.5f, -0.5f, -1.05f,
-			0.5f, 0.5f, -1.05f,};
+		float[] positions = new float[]{-0.5f, 0.5f, -1.05f, -0.5f, -0.5f, -1.05f, 0.5f, -0.5f, -1.05f, 0.5f, 0.5f, -1.05f,};
 		int[] indices = new int[]{0, 1, 3, 3, 1, 2,};
 		float[] colours = new float[]{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.5f, 0.5f,};
-		this.mesh = new Mesh(positions, colours, indices);
+		this.entity = new Entity.Builder().model(new Model(new Mesh(positions, colours, indices))).build();
 	}
 
 	public String loadResource(String fileName) throws Exception {
@@ -64,22 +59,21 @@ public class Renderer {
 			GL11.glViewport(0, 0, this.display.getWidth(), this.display.getHeight());
 			this.display.setResized(false);
 		}
-		this.renderMesh(this.mesh);
+		this.renderEntity(this.entity);
 	}
 
-	public void renderMesh(Mesh mesh) {
+	public void renderEntity(Entity entity) {
 		this.shaderProgram.bind();
-		this.shaderProgram.setUniform("projectionMatrix", this.projectionMatrix);
+		Matrix4f projectionMatrix = this.transformation.getProjectionMatrix(this.FOV, this.display.getWidth(), this.display.getHeight(), this.Z_NEAR, this.Z_FAR);
+		this.shaderProgram.setUniform("projectionMatrix", projectionMatrix);
 
-		GL30.glBindVertexArray(mesh.getVaoId());
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
+		Matrix4f worldMatrix = this.transformation.getWorldMatrix(entity.getTransform());
+		this.shaderProgram.setUniform("worldMatrix", worldMatrix);
 
-		GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-
-		GL20.glDisableVertexAttribArray(1);
-		GL20.glDisableVertexAttribArray(0);
-		GL30.glBindVertexArray(0);
+		Mesh mesh = entity.getMesh();
+		mesh.startRender();
+		mesh.render();
+		mesh.endRender();
 
 		this.shaderProgram.unbind();
 	}

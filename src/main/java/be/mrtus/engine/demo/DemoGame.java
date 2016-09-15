@@ -1,5 +1,6 @@
 package be.mrtus.engine.demo;
 
+import be.mrtus.engine.demo.domain.render.Renderer;
 import be.mrtus.engine.domain.Display;
 import be.mrtus.engine.domain.Game;
 import be.mrtus.engine.domain.GameEngine;
