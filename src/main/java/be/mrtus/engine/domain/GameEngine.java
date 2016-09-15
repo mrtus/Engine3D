@@ -73,6 +73,7 @@ public class GameEngine implements Runnable, KeyListener {
 
 	private void destroyInput() {
 		this.keyboard.destroy();
+		this.mouse.destroy();
 	}
 
 	private void init() throws Exception {
