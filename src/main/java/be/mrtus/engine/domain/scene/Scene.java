@@ -13,16 +13,7 @@ import java.util.Map;
 public class Scene {
 
 	private final List<Entity> entities = new ArrayList<>();
-	private final List<Entity> newEntities = new ArrayList<>();
 	private final Map<Model, List<Entity>> entityModels = new HashMap<>();
-
-	public Map<Model, List<Entity>> getEntityModels() {
-		return this.entityModels;
-	}
-
-	public List<Entity> getEntities() {
-		return this.entities;
-	}
 
 	public Scene() {
 		float[] positions = new float[]{
@@ -110,32 +101,31 @@ public class Scene {
 			7, 6, 4, 7, 4, 5
 		};
 		this.addEntity(new Entity.Builder()
-				.model(new Model(positions, textCoords, indices, new Texture()))
+				.model(new Model(positions, textCoords, indices, new Texture("/grassblock.png")))
 				.transform(new Transform.Builder().position(0f, 0f, -2.5f).build())
 				.controller(new SpinningEntityController(5f))
 				.build());
 	}
 
 	public void addEntity(Entity entity) {
-		this.newEntities.add(entity);
+		List<Entity> modelEntities = this.entityModels.get(entity.getModel());
+		if(modelEntities == null) {
+			modelEntities = new ArrayList<>();
+			this.entityModels.put(entity.getModel(), modelEntities);
+		}
+		modelEntities.add(entity);
+		this.entities.add(entity);
 	}
 
-	private void addNewEntities(List<Entity> entities) {
-		entities.forEach(entity -> {
-			List<Entity> ents = this.entityModels.get(entity.getModel());
-			if(ents == null) {
-				ents = new ArrayList<>();
-				this.entityModels.put(entity.getModel(), ents);
-			}
-			ents.add(entity);
-			this.entities.add(entity);
-		});
+	public List<Entity> getEntities() {
+		return this.entities;
+	}
+
+	public Map<Model, List<Entity>> getEntityModels() {
+		return this.entityModels;
 	}
 
 	public void update() {
-		this.addNewEntities(new ArrayList<>(this.newEntities));
-		this.newEntities.clear();
-
 		this.entities.forEach(Entity::update);
 	}
 }

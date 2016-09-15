@@ -13,9 +13,9 @@ public class Texture {
 
 	private int textureId;
 
-	public Texture() {
+	public Texture(String file) {
 		try {
-			PNGDecoder decoder = new PNGDecoder(Texture.class.getResourceAsStream("/grassblock.png"));
+			PNGDecoder decoder = new PNGDecoder(Texture.class.getResourceAsStream(file));
 			ByteBuffer buf = ByteBuffer.allocateDirect(4 * decoder.getWidth() * decoder.getHeight());
 			decoder.decode(buf, decoder.getWidth() * 4, Format.RGBA);
 			buf.flip();

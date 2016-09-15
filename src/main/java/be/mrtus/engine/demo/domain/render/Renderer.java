@@ -1,10 +1,10 @@
 package be.mrtus.engine.demo.domain.render;
 
-import be.mrtus.engine.domain.scene.Scene;
 import be.mrtus.engine.domain.Display;
 import be.mrtus.engine.domain.render.Model;
 import be.mrtus.engine.domain.render.shader.ShaderProgram;
 import be.mrtus.engine.domain.scene.Camera;
+import be.mrtus.engine.domain.scene.Scene;
 import be.mrtus.engine.domain.scene.entity.Entity;
 import java.nio.file.Files;
 import java.nio.file.Paths;
