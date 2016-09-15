@@ -158,6 +158,7 @@ public class DemoGame implements Game, KeyListener {
 
 	@Override
 	public void update() {
+		this.camera.update();
 		Transform transform = this.entity.getTransform();
 		float rotation = transform.getRotation().x - 1.0f;
 		if(rotation > 360) {

@@ -1,26 +1,27 @@
 package be.mrtus.engine.domain.input;
 
 import be.mrtus.engine.domain.Display;
-import org.joml.Vector2d;
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorEnterCallback;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.opengl.GL11;
 
 public class Mouse {
 
-	private final Vector2d currentPos;
+	private final Vector2f currentPos;
 	private GLFWCursorEnterCallback cursorEnterCallback;
 	private GLFWCursorPosCallback cursorPostCallback;
-	private final Vector2d deltaPos;
+	private final Vector2f deltaPos;
 	private final Display display;
 	private boolean inWindow = false;
-	private final Vector2d previousPos;
+	private final Vector2f previousPos;
 
 	public Mouse(Display display) {
 		this.display = display;
-		this.previousPos = new Vector2d(-1, -1);
-		this.currentPos = new Vector2d(0, 0);
-		this.deltaPos = new Vector2d(0, 0);
+		this.previousPos = new Vector2f(-1f, -1f);
+		this.currentPos = new Vector2f(0, 0);
+		this.deltaPos = new Vector2f(0, 0);
 	}
 
 	public void destroy() {
@@ -28,11 +29,15 @@ public class Mouse {
 		this.cursorEnterCallback.release();
 	}
 
+	public Vector2f getDeltaPos() {
+		return this.deltaPos;
+	}
+
 	public void init() {
 		GLFW.glfwSetCursorPosCallback(this.display.getDisplayId(), this.cursorPostCallback = new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xpos, double ypos) {
-				onMouseMoved(xpos, ypos);
+				onMouseMoved((float)xpos, (float)ypos);
 			}
 		});
 		GLFW.glfwSetCursorEnterCallback(this.display.getDisplayId(), this.cursorEnterCallback = new GLFWCursorEnterCallback() {
@@ -69,10 +74,10 @@ public class Mouse {
 	}
 
 	private void onMouseEnteredWindow(int entered) {
-		this.inWindow = (entered == 1);
+		this.inWindow = (entered == GL11.GL_TRUE);
 	}
 
-	private void onMouseMoved(double xpos, double ypos) {
+	private void onMouseMoved(float xpos, float ypos) {
 		this.currentPos.x = xpos;
 		this.currentPos.y = ypos;
 	}

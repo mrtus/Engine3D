@@ -72,7 +72,6 @@ public class GameEngine implements Runnable, KeyListener {
 	}
 
 	private void destroyInput() {
-		this.mouse.destroy();
 		this.keyboard.destroy();
 	}
 
@@ -95,6 +94,7 @@ public class GameEngine implements Runnable, KeyListener {
 	}
 
 	private void update() {
+		this.mouse.update();
 		this.game.update();
 		this.timer.updateUPS();
 		this.timer.update();
