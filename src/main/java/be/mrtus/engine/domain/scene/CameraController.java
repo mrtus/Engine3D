@@ -56,7 +56,7 @@ public class CameraController extends EntityController<Camera> {
 		} else if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_D)) {
 			this.moveInc.x = 1;
 		}
-		if(this.keyboard.isKeyPressed(GLFW.GLFW_MOD_SHIFT)) {
+		if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_LEFT_SHIFT)) {
 			this.moveInc.y = -1;
 		} else if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
 			this.moveInc.y = 1;

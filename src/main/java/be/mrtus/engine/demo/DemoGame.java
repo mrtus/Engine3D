@@ -9,7 +9,6 @@ import be.mrtus.engine.domain.input.Keyboard;
 import be.mrtus.engine.domain.input.Mouse;
 import be.mrtus.engine.domain.render.Mesh;
 import be.mrtus.engine.domain.render.Texture;
-import be.mrtus.engine.domain.render.shader.ShaderProgram;
 import be.mrtus.engine.domain.scene.Camera;
 import be.mrtus.engine.domain.scene.entity.Entity;
 import be.mrtus.engine.domain.scene.entity.component.Model;
@@ -26,7 +25,6 @@ public class DemoGame implements Game, KeyListener {
 	private Entity entity;
 	private Keyboard keyboard;
 	private Mouse mouse;
-	private ShaderProgram program;
 	private Renderer renderer;
 
 	@Override
@@ -161,7 +159,11 @@ public class DemoGame implements Game, KeyListener {
 		if(this.mouse.isLeftButtonPressed() && !this.mouse.isMouseGrabbed()) {
 			this.mouse.setMouseGrabbed(true);
 		}
+		if(this.mouse.isMiddleButtonPressed()) {
+			this.camera.reset();
+		}
 		this.camera.update();
+
 		Transform transform = this.entity.getTransform();
 		float rotation = transform.getRotation().x - 1.0f;
 		if(rotation > 360) {
