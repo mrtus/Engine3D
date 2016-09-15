@@ -1,4 +1,4 @@
-package be.mrtus.gameengine.domain;
+package be.mrtus.engine.domain;
 
 import org.lwjgl.glfw.GLFW;
 

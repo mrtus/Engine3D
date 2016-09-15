@@ -1,6 +1,6 @@
-package be.mrtus.gameengine.domain.input;
+package be.mrtus.engine.domain.input;
 
-import be.mrtus.gameengine.domain.Display;
+import be.mrtus.engine.domain.Display;
 import java.util.ArrayList;
 import java.util.List;
 import org.lwjgl.glfw.GLFW;

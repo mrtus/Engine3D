@@ -1,8 +1,8 @@
-package be.mrtus.gameengine.domain;
+package be.mrtus.engine.domain;
 
-import be.mrtus.gameengine.domain.input.KeyListener;
-import be.mrtus.gameengine.domain.input.Keyboard;
-import be.mrtus.gameengine.domain.input.Mouse;
+import be.mrtus.engine.domain.input.KeyListener;
+import be.mrtus.engine.domain.input.Keyboard;
+import be.mrtus.engine.domain.input.Mouse;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 
@@ -15,24 +15,22 @@ public class GameEngine implements Runnable, KeyListener {
 	private final Mouse mouse;
 	private final Timer timer;
 
-	public GameEngine(Game game) {
+	public GameEngine(Game game, String title, int width, int height, boolean fullscreen, boolean vsync) {
 		this.game = game;
-		this.engineThread = new Thread(this, "ENGINE_THREAD");
-		this.display = new Display("GameEngine 3D", 800, 600, false, false);
+		this.display = new Display(title, width, height, fullscreen, vsync);
 		this.timer = new Timer();
 		this.mouse = new Mouse(this.display);
 		this.keyboard = new Keyboard(this.display);
 		this.keyboard.addKeyListener(this);
+		this.engineThread = new Thread(this, "ENGINE_THREAD");
 	}
 
 	@Override
 	public void keyPressed(int key, int action, int modifier) {
-		if(key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE) {
-			this.display.closeWindow();
-		} else if(key == GLFW.GLFW_KEY_F11 && action == GLFW.GLFW_RELEASE) {
+		if(key == GLFW.GLFW_KEY_F11 && action == GLFW.GLFW_RELEASE) {
 			this.display.toggleFullscreen();
-//			this.destroyInput();
-//			this.initInput();
+			this.destroyInput();
+			this.initInput();
 		}
 	}
 

@@ -1,4 +1,4 @@
-package be.mrtus.gameengine.domain;
+package be.mrtus.engine.domain;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
-package be.mrtus.gameengine.domain;
+package be.mrtus.engine.domain;
 
-import be.mrtus.gameengine.domain.input.Keyboard;
-import be.mrtus.gameengine.domain.input.Mouse;
+import be.mrtus.engine.domain.input.Keyboard;
+import be.mrtus.engine.domain.input.Mouse;
 
 public interface Game {
 

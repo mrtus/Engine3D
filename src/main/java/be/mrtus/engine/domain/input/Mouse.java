@@ -1,6 +1,6 @@
-package be.mrtus.gameengine.domain.input;
+package be.mrtus.engine.domain.input;
 
-import be.mrtus.gameengine.domain.Display;
+import be.mrtus.engine.domain.Display;
 import org.joml.Vector2d;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorEnterCallback;

@@ -1,4 +1,4 @@
-package be.mrtus.gameengine.domain.input;
+package be.mrtus.engine.domain.input;
 
 public interface KeyListener {
 
