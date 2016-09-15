@@ -31,8 +31,8 @@ public class Renderer {
 
 		float[] positions = new float[]{-0.5f, 0.5f, 0.0f, -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f,};
 		int[] indices = new int[]{0, 1, 3, 3, 1, 2,};
-
-		this.mesh = new Mesh(positions, indices);
+		float[] colours = new float[]{0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.5f, 0.5f,};
+		this.mesh = new Mesh(positions, colours, indices);
 	}
 
 	public void render(Display display, float alpha) {
@@ -49,8 +49,10 @@ public class Renderer {
 
 		GL30.glBindVertexArray(mesh.getVaoId());
 		GL20.glEnableVertexAttribArray(0);
+		GL20.glEnableVertexAttribArray(1);
 		GL11.glDrawElements(GL11.GL_TRIANGLES, mesh.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 
+		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
 

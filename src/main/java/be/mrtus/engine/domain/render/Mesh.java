@@ -10,12 +10,13 @@ import org.lwjgl.opengl.GL30;
 
 public class Mesh {
 
+	private final int colourVboId;
 	private final int indexVboId;
 	private final int vaoId;
 	private final int vboId;
 	private final int vertexCount;
 
-	public Mesh(float[] positions, int[] indices) {
+	public Mesh(float[] positions, float[] colours, int[] indices) {
 		this.vertexCount = indices.length;
 		FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(positions.length);
 		verticesBuffer.put(positions).flip();
@@ -28,6 +29,13 @@ public class Mesh {
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+		this.colourVboId = GL15.glGenBuffers();
+		FloatBuffer colourBuffer = BufferUtils.createFloatBuffer(colours.length);
+		colourBuffer.put(colours).flip();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.colourVboId);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colourBuffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0);
 
 		this.indexVboId = GL15.glGenBuffers();
 		IntBuffer indicesBuffer = BufferUtils.createIntBuffer(indices.length);
