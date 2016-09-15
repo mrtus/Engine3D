@@ -1,6 +1,5 @@
 package be.mrtus.engine.domain.render;
 
-import be.mrtus.engine.domain.render.Texture;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
@@ -70,6 +69,8 @@ public class Model {
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
+
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
 	}
 
 	public void render() {
@@ -81,7 +82,9 @@ public class Model {
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.texture.getId());
+		if(this.texture != null && this.texture.getId() != -1) {
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.texture.getId());
+		}
 	}
 }

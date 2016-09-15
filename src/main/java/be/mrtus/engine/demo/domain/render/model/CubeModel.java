@@ -89,7 +89,6 @@ public class CubeModel extends Model {
 			19, 18, 16, 19, 16, 17,
 			// Back face
 			7, 6, 4, 7, 4, 5
-		}, new Texture("/grassblock.png")
-		);
+		}, new Texture("/grassblock.png"));
 	}
 }

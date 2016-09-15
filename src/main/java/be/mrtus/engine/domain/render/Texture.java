@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL30;
 
 public class Texture {
 
-	private int textureId;
+	private int textureId = -1;
 
 	public Texture(String file) {
 		try {
