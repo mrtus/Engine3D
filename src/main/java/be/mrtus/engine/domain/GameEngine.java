@@ -88,8 +88,8 @@ public class GameEngine implements Runnable, KeyListener {
 		this.keyboard.init();
 	}
 
-	private void render(float delta) {
-		this.game.render(delta);
+	private void render(float alpha) {
+		this.game.render(alpha);
 		this.timer.updateFPS();
 		this.display.update();
 	}

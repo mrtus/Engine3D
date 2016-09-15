@@ -9,7 +9,7 @@ public interface Game {
 
 	public void update();
 
-	public void render(float delta);
+	public void render(float alpha);
 
 	public void destroy();
 

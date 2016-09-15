@@ -37,7 +37,7 @@ public class DemoGame implements Game, KeyListener {
 	}
 
 	@Override
-	public void render(float delta) {
+	public void render(float alpha) {
 	}
 
 	@Override
