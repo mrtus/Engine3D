@@ -1,6 +1,9 @@
 
+import be.mrtus.gameengine.domain.Display;
 import be.mrtus.gameengine.domain.Game;
 import be.mrtus.gameengine.domain.GameEngine;
+import be.mrtus.gameengine.domain.input.Keyboard;
+import be.mrtus.gameengine.domain.input.Mouse;
 
 public class StartUp {
 
@@ -12,7 +15,7 @@ public class StartUp {
 			}
 
 			@Override
-			public void init() {
+			public void init(Display display, Keyboard keyboard, Mouse mouse) {
 			}
 
 			@Override

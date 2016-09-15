@@ -70,10 +70,10 @@ public class Display {
 		GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GL11.GL_TRUE);
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GL11.GL_TRUE);
 
-//		ByteBuffer vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-		ByteBuffer vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetMonitors().get(2));
+		ByteBuffer vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+//		ByteBuffer vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetMonitors().get(2));
 		if(this.fullscreen) {
-			this.id = GLFW.glfwCreateWindow(GLFWvidmode.width(vidMode), GLFWvidmode.height(vidMode), this.title, GLFW.glfwGetMonitors().get(2), 0);
+			this.id = GLFW.glfwCreateWindow(GLFWvidmode.width(vidMode), GLFWvidmode.height(vidMode), this.title, GLFW.glfwGetPrimaryMonitor(), 0);
 		} else {
 			this.id = GLFW.glfwCreateWindow(this.width, this.height, this.title, 0, 0);
 		}
@@ -87,7 +87,7 @@ public class Display {
 			public void invoke(long window, int w, int h) {
 				Display.this.width = w;
 				Display.this.height = h;
-				setResized(true);
+				Display.this.setResized(true);
 			}
 		});
 
