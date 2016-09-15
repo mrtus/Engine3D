@@ -76,7 +76,7 @@ public class GameEngine implements Runnable, KeyListener {
 		this.keyboard.destroy();
 	}
 
-	private void init() {
+	private void init() throws Exception {
 		this.display.init();
 		this.timer.init();
 		this.initInput();

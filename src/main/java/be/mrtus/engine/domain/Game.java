@@ -5,7 +5,7 @@ import be.mrtus.engine.domain.input.Mouse;
 
 public interface Game {
 
-	public void init(Display display, Keyboard keyboard, Mouse mouse);
+	public void init(Display display, Keyboard keyboard, Mouse mouse) throws Exception;
 
 	public void update();
 
