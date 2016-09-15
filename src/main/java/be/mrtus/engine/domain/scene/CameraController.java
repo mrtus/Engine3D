@@ -12,9 +12,25 @@ public class CameraController extends EntityController<Camera> {
 	private final Keyboard keyboard;
 	private final Mouse mouse;
 
+	private Vector3f moveInc = new Vector3f();
+
 	public CameraController(Keyboard keyboard, Mouse mouse) {
 		this.keyboard = keyboard;
 		this.mouse = mouse;
+	}
+
+	public void movePosition(float offsetX, float offsetY, float offsetZ) {
+		Vector3f position = this.entity.getPosition();
+		Vector3f rotation = this.entity.getTransform().getRotation();
+		if(offsetZ != 0) {
+			position.x += (float)Math.sin(Math.toRadians(rotation.y)) * -offsetZ;
+			position.z += (float)Math.cos(Math.toRadians(rotation.y)) * offsetZ;
+		}
+		if(offsetX != 0) {
+			position.x += (float)Math.sin(Math.toRadians(rotation.y - 90)) * -offsetX;
+			position.z += (float)Math.cos(Math.toRadians(rotation.y - 90)) * offsetX;
+		}
+		position.y += offsetY;
 	}
 
 	public void moveRotation(float offsetX, float offsetY, float offsetZ) {
@@ -24,43 +40,27 @@ public class CameraController extends EntityController<Camera> {
 		rotation.z += offsetZ * 0.1;
 	}
 
-	public void movePosition(float offsetX, float offsetY, float offsetZ) {
-		Vector3f position = this.entity.getPosition();
-		Vector3f rotation = this.entity.getTransform().getRotation();
-		if(offsetZ != 0) {
-			position.x += (float)Math.sin(Math.toRadians(rotation.y)) * -1.0f * offsetZ;
-			position.z += (float)Math.cos(Math.toRadians(rotation.y)) * offsetZ;
-		}
-		if(offsetX != 0) {
-			position.x += (float)Math.sin(Math.toRadians(rotation.y - 90)) * -1.0f * offsetX;
-			position.z += (float)Math.cos(Math.toRadians(rotation.y - 90)) * offsetX;
-		}
-		position.y += offsetY;
-	}
-
-	private Vector3f camMov = new Vector3f();
-
 	@Override
 	public void update() {
 		Vector2f deltaPos = this.mouse.getDeltaPos();
 		this.moveRotation(deltaPos.x, deltaPos.y, 0);
 
-		this.camMov.set(0, 0, 0);
+		this.moveInc.set(0, 0, 0);
 		if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_W)) {
-			this.camMov.z = -1;
+			this.moveInc.z = -1;
 		} else if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_S)) {
-			this.camMov.z = 1;
+			this.moveInc.z = 1;
 		}
 		if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_A)) {
-			this.camMov.x = -1;
+			this.moveInc.x = -1;
 		} else if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_D)) {
-			this.camMov.x = 1;
+			this.moveInc.x = 1;
 		}
 		if(this.keyboard.isKeyPressed(GLFW.GLFW_MOD_SHIFT)) {
-			this.camMov.y = -1;
-		} else if(this.keyboard.isKeyPressed(GLFW.GLFW_MOD_CONTROL)) {
-			this.camMov.y = 1;
+			this.moveInc.y = -1;
+		} else if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
+			this.moveInc.y = 1;
 		}
-		this.movePosition(this.camMov.x * 0.1f, this.camMov.y * 0.1f, this.camMov.z * 0.1f);
+		this.movePosition(this.moveInc.x * 0.1f, this.moveInc.y * 0.1f, this.moveInc.z * 0.1f);
 	}
 }

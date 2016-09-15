@@ -75,7 +75,7 @@ public class Mouse {
 			this.setMouseGrabbed(true);
 			GLFW.glfwSetCursorPos(this.display.getDisplayId(), this.display.getWidth() / 2, this.display.getHeight() / 2);
 		}
-		if(this.mouseGrabbed) {
+		if(this.isMouseGrabbed()) {
 			DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
 			DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
 
@@ -88,12 +88,10 @@ public class Mouse {
 			this.deltaPos.x = this.currentPos.x - this.display.getWidth() / 2;
 			this.deltaPos.y = this.currentPos.y - this.display.getHeight() / 2;
 			GLFW.glfwSetCursorPos(this.display.getDisplayId(), this.display.getWidth() / 2, this.display.getHeight() / 2);
-		} else {
-			;
 		}
 	}
 
-	private boolean isMouseGrabbed() {
+	public boolean isMouseGrabbed() {
 		return this.mouseGrabbed;
 	}
 
