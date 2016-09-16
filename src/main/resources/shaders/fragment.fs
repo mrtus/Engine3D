@@ -8,7 +8,7 @@ uniform vec3 colour;
 uniform int useColour;
 
 void main(){
-	if(userColour == 1){
+	if(useColour == 1){
 		fragColor = vec4(colour, 1);
 	}else{
 		fragColor = texture(texture_sampler, outTextCoord);
