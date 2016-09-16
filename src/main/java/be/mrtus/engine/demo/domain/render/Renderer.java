@@ -6,11 +6,13 @@ import be.mrtus.engine.domain.render.shader.ShaderProgram;
 import be.mrtus.engine.domain.scene.Camera;
 import be.mrtus.engine.domain.scene.Scene;
 import be.mrtus.engine.domain.scene.entity.Entity;
+import be.mrtus.engine.domain.scene.entity.light.PointLight;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 
 public class Renderer {
@@ -20,9 +22,14 @@ public class Renderer {
 	private final float Z_NEAR = 0.01f;
 	private ShaderProgram shaderProgram;
 	private final Transformation transformation;
+	private PointLight pointLight;
 
 	public Renderer() {
 		this.transformation = new Transformation();
+
+		Vector3f lightColour = new Vector3f(1, 1, 1);
+		Vector3f lightPosition = new Vector3f(0, 0, 1);
+		this.pointLight = new PointLight(lightColour, lightPosition, 1f);
 	}
 
 	public void clear() {
@@ -43,8 +50,11 @@ public class Renderer {
 		this.shaderProgram.createUniform("projectionMatrix");
 		this.shaderProgram.createUniform("modelViewMatrix");
 		this.shaderProgram.createUniform("texture_sampler");
-		this.shaderProgram.createUniform("colour");
-		this.shaderProgram.createUniform("useColour");
+		this.shaderProgram.createMaterialUniform("material");
+//		this.shaderProgram.createUniform("camera_pos");
+//		this.shaderProgram.createUniform("specularPower");
+//		this.shaderProgram.createUniform("ambientLight");
+//		this.shaderProgram.createPointLightUniform("pointLight");
 	}
 
 	public String loadResource(String fileName) throws Exception {
@@ -61,13 +71,11 @@ public class Renderer {
 
 		Matrix4f projectionMatrix = this.transformation.getProjectionMatrix(this.FOV, display.getWidth(), display.getHeight(), this.Z_NEAR, this.Z_FAR);
 		Matrix4f viewMatrix = this.transformation.getViewMatrix(camera);
-		this.renderScene(scene, projectionMatrix, viewMatrix);
+		this.renderScene(camera, scene, projectionMatrix, viewMatrix);
 	}
 
 	public void renderModel(Model model, List<Entity> entities, Matrix4f viewMatrix) {
-		this.shaderProgram.setUniform("texture_sampler", 0);
-		this.shaderProgram.setUniform("colour", model.getColour());
-		this.shaderProgram.setUniform("useColour", model.isTextured() ? 0 : 1);
+		this.shaderProgram.setUniform("material", model.getMaterial());
 
 		model.startRender();
 		entities.forEach(entity -> {
@@ -78,10 +86,21 @@ public class Renderer {
 		model.endRender();
 	}
 
-	private void renderScene(Scene scene, Matrix4f projectionMatrix, Matrix4f viewMatrix) {
+	private void renderScene(Camera camera, Scene scene, Matrix4f projectionMatrix, Matrix4f viewMatrix) {
 		this.shaderProgram.bind();
 		this.shaderProgram.setUniform("projectionMatrix", projectionMatrix);
+		this.shaderProgram.setUniform("texture_sampler", 0);
 
+//		this.shaderProgram.setUniform("camera_pos", camera.getPosition());
+//		this.shaderProgram.setUniform("ambientLight", new Vector3f(0, 0, 0));
+//		this.shaderProgram.setUniform("specularPower", 10f);
+//		Vector3f lightPos = new Vector3f(this.pointLight.getPosition());
+//		Vector4f aux = new Vector4f(lightPos, 1);
+//		aux.mul(viewMatrix);
+//		lightPos.x = aux.x;
+//		lightPos.y = aux.y;
+//		lightPos.z = aux.z;
+//		this.shaderProgram.setUniform("pointLight", this.pointLight);
 //		GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_LINE);
 		Map<Model, List<Entity>> modelEntities = scene.getEntityModels();
 		modelEntities.forEach((model, entities) -> this.renderModel(model, entities, viewMatrix));

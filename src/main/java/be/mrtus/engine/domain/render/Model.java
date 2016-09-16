@@ -13,7 +13,6 @@ public class Model {
 	private final int indexVboId;
 	private Material material;
 	private final int normalsVboId;
-	private Texture texture;
 	private final int vaoId;
 	private final int vboId;
 	private final int vertexCount;
@@ -76,8 +75,9 @@ public class Model {
 		GL30.glBindVertexArray(0);
 		GL30.glDeleteVertexArrays(this.vaoId);
 
-		if(this.texture != null) {
-			this.texture.cleanup();
+		Texture texture = this.material.getTexture();
+		if(texture != null) {
+			texture.cleanup();
 		}
 	}
 
@@ -86,8 +86,9 @@ public class Model {
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
-		if(this.texture != null) {
-			this.texture.unbind();
+		Texture texture = this.material.getTexture();
+		if(texture != null) {
+			texture.unbind();
 		}
 	}
 
@@ -99,12 +100,8 @@ public class Model {
 		return this.material;
 	}
 
-	public void setTexture(Texture texture) {
-		this.texture = texture;
-	}
-
-	public boolean isTextured() {
-		return this.texture != null;
+	public void setMaterial(Material material) {
+		this.material = material;
 	}
 
 	public void render() {
@@ -117,8 +114,9 @@ public class Model {
 		GL20.glEnableVertexAttribArray(1);
 		GL20.glEnableVertexAttribArray(2);
 
-		if(this.texture != null) {
-			this.texture.bind();
+		Texture texture = this.material.getTexture();
+		if(texture != null) {
+			texture.bind();
 		}
 	}
 }

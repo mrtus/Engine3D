@@ -1,18 +1,56 @@
 package be.mrtus.engine.domain.render;
 
-import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 public class Material {
 
-	public Matrix4f getColour() {
-		throw new UnsupportedOperationException("Not supported yet.");
+	private static final Vector3f DEFAULT_COLOUR = new Vector3f(1.0f, 1.0f, 1.0f);
+	private Vector3f colour;
+	private float reflectance;
+	private Texture texture;
+
+	public Material() {
+		this.colour = DEFAULT_COLOUR;
+		this.reflectance = 0;
 	}
 
-	public Matrix4f getReflectance() {
-		throw new UnsupportedOperationException("Not supported yet.");
+	public Material(Vector3f colour, float reflectance) {
+		this();
+		this.colour = colour;
+		this.reflectance = reflectance;
+	}
+
+	public Material(Texture texture, float reflectance) {
+		this();
+		this.texture = texture;
+		this.reflectance = reflectance;
+	}
+
+	public Vector3f getColour() {
+		return colour;
+	}
+
+	public void setColour(Vector3f colour) {
+		this.colour = colour;
+	}
+
+	public float getReflectance() {
+		return this.reflectance;
+	}
+
+	public void setReflectance(float reflectance) {
+		this.reflectance = reflectance;
+	}
+
+	public Texture getTexture() {
+		return this.texture;
+	}
+
+	public void setTexture(Texture texture) {
+		this.texture = texture;
 	}
 
 	public boolean isTextured() {
-		throw new UnsupportedOperationException("Not supported yet.");
+		return this.texture != null;
 	}
 }

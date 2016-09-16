@@ -1,6 +1,7 @@
 package be.mrtus.engine.domain.scene;
 
 import be.mrtus.engine.domain.OBJLoader;
+import be.mrtus.engine.domain.render.Material;
 import be.mrtus.engine.domain.render.Model;
 import be.mrtus.engine.domain.render.Texture;
 import be.mrtus.engine.domain.scene.entity.Entity;
@@ -19,8 +20,10 @@ public class Scene {
 		float x;
 		float y = 0;
 //		Model cubeModel = new CubeModel();
-		Model cubeModel = OBJLoader.loadModel("/models/bunny.obj");
-		cubeModel.setTexture(new Texture("/grassblock.png"));
+		Model cubeModel = OBJLoader.loadModel("/models/cube.obj");
+		Texture texture = new Texture("/grassblock.png");
+		Material material = new Material(texture, 1f);
+		cubeModel.setMaterial(material);
 		int value = 1;
 		double pow = Math.pow(value, 2);
 		System.out.println("Creating " + pow + " entities!");

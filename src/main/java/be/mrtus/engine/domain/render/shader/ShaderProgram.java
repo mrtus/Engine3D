@@ -48,6 +48,15 @@ public class ShaderProgram {
 		this.createUniform(uniformName + ".att.exponent");
 	}
 
+	public void createPointLightUniform(String uniformName) throws Exception {
+		this.createUniform(uniformName + ".colour");
+		this.createUniform(uniformName + ".position");
+		this.createUniform(uniformName + ".intensity");
+		this.createUniform(uniformName + ".att.constant");
+		this.createUniform(uniformName + ".att.linear");
+		this.createUniform(uniformName + ".att.exponent");
+	}
+
 	public int createShader(String shaderCode, int shaderType) throws Exception {
 		int shaderId = GL20.glCreateShader(shaderType);
 		if(shaderId == 0) {
@@ -119,6 +128,10 @@ public class ShaderProgram {
 		this.setUniform(uniformName + ".att.constant", att.getConstant());
 		this.setUniform(uniformName + ".att.linear", att.getLinear());
 		this.setUniform(uniformName + ".att.exponent", att.getExponent());
+	}
+
+	public void setUniform(String uniformName, float value) {
+		GL20.glUniform1f(this.uniforms.get(uniformName).getId(), value);
 	}
 
 	public void setUniform(String uniformName, Vector3f vector) {
