@@ -1,8 +1,9 @@
 package be.mrtus.engine.domain.scene;
 
-import be.mrtus.engine.demo.domain.entity.component.SpinningEntityController;
-import be.mrtus.engine.demo.domain.render.model.CubeModel;
+import be.mrtus.engine.domain.OBJLoader;
+import be.mrtus.engine.domain.render.Material;
 import be.mrtus.engine.domain.render.Model;
+import be.mrtus.engine.domain.render.Texture;
 import be.mrtus.engine.domain.scene.entity.Entity;
 import be.mrtus.engine.domain.scene.entity.component.Transform;
 import java.util.ArrayList;
@@ -18,21 +19,25 @@ public class Scene {
 	public Scene() throws Exception {
 		float x;
 		float y = 0;
-		Model cubeModel = new CubeModel();
-		int value = 250;
+//		Model cubeModel = new CubeModel();
+		Model cubeModel = OBJLoader.loadModel("/models/cube.obj");
+		Texture texture = new Texture("/grassblock.png");
+		Material material = new Material(texture, 1f);
+		cubeModel.setMaterial(material);
+		int value = 1;
 		double pow = Math.pow(value, 2);
 		System.out.println("Creating " + pow + " entities!");
 		for (int i = 0; i < pow; i++) {
-			x = i % value;
+			x = i % value * 2;
 			if(i % value == 0) {
-				y += 1;
+				y += 2;
 			}
 			this.addEntity(new Entity.Builder()
 					.model(cubeModel)
 					.transform(new Transform.Builder()
 							.position(x, 0f, -y - 10f)
 							.build())
-					.controller(new SpinningEntityController(1f))
+					//					.controller(new SpinningEntityController(1f))
 					.build());
 		}
 	}
@@ -45,6 +50,10 @@ public class Scene {
 		}
 		modelEntities.add(entity);
 		this.entities.add(entity);
+	}
+
+	public void destroy() {
+		this.entityModels.forEach((model, entities) -> model.destroy());
 	}
 
 	public List<Entity> getEntities() {

@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL30;
 
 public class Texture {
@@ -30,6 +31,19 @@ public class Texture {
 		} catch (IOException ex) {
 			Logger.getLogger(Texture.class.getName()).log(Level.SEVERE, null, ex);
 		}
+	}
+
+	public void unbind() {
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+	}
+
+	public void bind() {
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.textureId);
+	}
+
+	public void cleanup() {
+		GL11.glDeleteTextures(this.textureId);
 	}
 
 	public int getId() {

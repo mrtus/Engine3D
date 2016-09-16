@@ -6,6 +6,7 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
@@ -39,6 +40,15 @@ public class ShaderProgram {
 	}
 
 	public void createPointLightIniform(String uniformName) throws Exception {
+		this.createUniform(uniformName + ".colour");
+		this.createUniform(uniformName + ".position");
+		this.createUniform(uniformName + ".intensity");
+		this.createUniform(uniformName + ".att.constant");
+		this.createUniform(uniformName + ".att.linear");
+		this.createUniform(uniformName + ".att.exponent");
+	}
+
+	public void createPointLightUniform(String uniformName) throws Exception {
 		this.createUniform(uniformName + ".colour");
 		this.createUniform(uniformName + ".position");
 		this.createUniform(uniformName + ".intensity");
@@ -118,6 +128,14 @@ public class ShaderProgram {
 		this.setUniform(uniformName + ".att.constant", att.getConstant());
 		this.setUniform(uniformName + ".att.linear", att.getLinear());
 		this.setUniform(uniformName + ".att.exponent", att.getExponent());
+	}
+
+	public void setUniform(String uniformName, float value) {
+		GL20.glUniform1f(this.uniforms.get(uniformName).getId(), value);
+	}
+
+	public void setUniform(String uniformName, Vector3f vector) {
+		GL20.glUniform3f(this.uniforms.get(uniformName).getId(), vector.x, vector.y, vector.z);
 	}
 
 	public void setUniform(String uniformName, Material material) {

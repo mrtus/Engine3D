@@ -26,6 +26,7 @@ public class DemoGame implements Game, KeyListener {
 	@Override
 	public void destroy() {
 		this.renderer.destroy();
+		this.scene.destroy();
 	}
 
 	@Override

@@ -2,21 +2,22 @@ package be.mrtus.engine.domain.render;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 
 public class Model {
 
+	private Vector3f colour;
 	private final int colourVboId;
 	private final int indexVboId;
-	private final Material material;
-	private final Texture texture;
+	private Material material;
+	private final int normalsVboId;
 	private final int vaoId;
 	private final int vboId;
 	private final int vertexCount;
 
-	public Model(float[] positions, float[] textCoords, int[] indices, Texture texture) {
-		this.texture = texture;
+	public Model(float[] positions, float[] textCoords, float[] normals, int[] indices) {
 		this.vertexCount = indices.length;
 		FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(positions.length);
 		verticesBuffer.put(positions).flip();
@@ -37,6 +38,13 @@ public class Model {
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colourBuffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 0, 0);
 
+		this.normalsVboId = GL15.glGenBuffers();
+		FloatBuffer vecNormalsBuffer = BufferUtils.createFloatBuffer(normals.length);
+		vecNormalsBuffer.put(normals).flip();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.normalsVboId);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vecNormalsBuffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 0, 0);
+
 		this.indexVboId = GL15.glGenBuffers();
 		IntBuffer indicesBuffer = BufferUtils.createIntBuffer(indices.length);
 		indicesBuffer.put(indices).flip();
@@ -48,12 +56,11 @@ public class Model {
 
 	public Model() {
 		this.colourVboId = 0;
+		this.normalsVboId = 0;
 		this.indexVboId = 0;
 		this.vaoId = 0;
 		this.vboId = 0;
 		this.vertexCount = 0;
-		this.texture = null;
-		this.material = null;
 	}
 
 	public void destroy() {
@@ -62,21 +69,39 @@ public class Model {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		GL15.glDeleteBuffers(this.vboId);
 		GL15.glDeleteBuffers(this.indexVboId);
+		GL15.glDeleteBuffers(this.colourVboId);
+		GL15.glDeleteBuffers(this.normalsVboId);
 
 		GL30.glBindVertexArray(0);
 		GL30.glDeleteVertexArrays(this.vaoId);
+
+		Texture texture = this.material.getTexture();
+		if(texture != null) {
+			texture.cleanup();
+		}
 	}
 
 	public void endRender() {
+		GL20.glDisableVertexAttribArray(2);
 		GL20.glDisableVertexAttribArray(1);
 		GL20.glDisableVertexAttribArray(0);
 		GL30.glBindVertexArray(0);
+		Texture texture = this.material.getTexture();
+		if(texture != null) {
+			texture.unbind();
+		}
+	}
 
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+	public Vector3f getColour() {
+		return this.colour;
 	}
 
 	public Material getMaterial() {
 		return this.material;
+	}
+
+	public void setMaterial(Material material) {
+		this.material = material;
 	}
 
 	public void render() {
@@ -87,10 +112,11 @@ public class Model {
 		GL30.glBindVertexArray(this.vaoId);
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
+		GL20.glEnableVertexAttribArray(2);
 
-		if(this.texture != null && this.texture.getId() != -1) {
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.texture.getId());
+		Texture texture = this.material.getTexture();
+		if(texture != null) {
+			texture.bind();
 		}
 	}
 }
