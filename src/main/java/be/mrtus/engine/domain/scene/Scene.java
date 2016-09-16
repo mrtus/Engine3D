@@ -19,7 +19,7 @@ public class Scene {
 		float x;
 		float y = 0;
 		Model cubeModel = new CubeModel();
-		int value = 20;
+		int value = 250;
 		double pow = Math.pow(value, 2);
 		System.out.println("Creating " + pow + " entities!");
 		for (int i = 0; i < pow; i++) {

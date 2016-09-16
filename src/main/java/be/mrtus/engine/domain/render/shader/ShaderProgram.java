@@ -9,9 +9,10 @@ import org.lwjgl.opengl.GL20;
 
 public class ShaderProgram {
 
+	private FloatBuffer buffer;
 	private int fragmentId;
 	private final int programId;
-	private final Map<String, Integer> uniforms = new HashMap();
+	private final Map<String, Uniform> uniforms = new HashMap();
 	private int vertexId;
 
 	public ShaderProgram() throws Exception {
@@ -34,7 +35,7 @@ public class ShaderProgram {
 		if(uniformLocation < 0) {
 			throw new Exception("Could not create uniform: " + uniformName);
 		}
-		this.uniforms.put(uniformName, uniformLocation);
+		this.uniforms.put(uniformName, new Uniform(uniformLocation, BufferUtils.createFloatBuffer(16)));
 	}
 
 	public void createVertexShader(String shaderCode) throws Exception {
@@ -59,22 +60,20 @@ public class ShaderProgram {
 		if(GL20.glGetProgrami(this.programId, GL20.GL_LINK_STATUS) == 0) {
 			throw new Exception("Error linking Shader code: " + GL20.glGetShaderInfoLog(this.programId, 1024));
 		}
-
 		GL20.glValidateProgram(this.programId);
 		if(GL20.glGetProgrami(this.programId, GL20.GL_VALIDATE_STATUS) == 0) {
 			System.err.println("Warning validating Shader code: " + GL20.glGetShaderInfoLog(this.programId, 1024));
 		}
-
 	}
 
-	public void setUniform(String uniformName, Matrix4f value) {
-		FloatBuffer fb = BufferUtils.createFloatBuffer(16);
-		value.get(fb);
-		GL20.glUniformMatrix4fv(this.uniforms.get(uniformName), false, fb);
+	public void setUniform(String uniformName, Matrix4f matrix) {
+		Uniform uniform = this.uniforms.get(uniformName);
+		matrix.get(uniform.getBuffer());
+		GL20.glUniformMatrix4fv(uniform.getId(), false, uniform.getBuffer());
 	}
 
 	public void setUniform(String uniformName, int value) {
-		GL20.glUniform1i(uniforms.get(uniformName), value);
+		GL20.glUniform1i(this.uniforms.get(uniformName).getId(), value);
 	}
 
 	public void unbind() {
