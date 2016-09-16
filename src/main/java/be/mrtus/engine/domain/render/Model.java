@@ -11,6 +11,8 @@ public class Model {
 	private Vector3f colour;
 	private final int colourVboId;
 	private final int indexVboId;
+	private final Material material;
+	private final Texture texture;
 	private final int normalsVboId;
 	private Texture texture;
 	private final int vaoId;
@@ -61,6 +63,7 @@ public class Model {
 		this.vboId = 0;
 		this.vertexCount = 0;
 		this.texture = null;
+		this.material = null;
 	}
 
 	public void destroy() {
@@ -100,6 +103,10 @@ public class Model {
 
 	public boolean isTextured() {
 		return this.texture != null;
+	}
+
+	public Material getMaterial() {
+		return this.material;
 	}
 
 	public void render() {
