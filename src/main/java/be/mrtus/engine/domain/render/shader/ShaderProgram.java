@@ -1,5 +1,7 @@
 package be.mrtus.engine.domain.render.shader;
 
+import be.mrtus.engine.domain.render.Material;
+import be.mrtus.engine.domain.scene.entity.light.PointLight;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +30,38 @@ public class ShaderProgram {
 
 	public void createFragmentShader(String shaderCode) throws Exception {
 		this.fragmentId = this.createShader(shaderCode, GL20.GL_FRAGMENT_SHADER);
+	}
+
+	public void createMaterialUniform(String uniformName) throws Exception {
+		this.createUniform(uniformName + ".colour");
+		this.createUniform(uniformName + ".useColour");
+		this.createUniform(uniformName + ".reflectance");
+	}
+
+	public void createPointLightIniform(String uniformName) throws Exception {
+		this.createUniform(uniformName + ".colour");
+		this.createUniform(uniformName + ".position");
+		this.createUniform(uniformName + ".intensity");
+		this.createUniform(uniformName + ".att.constant");
+		this.createUniform(uniformName + ".att.linear");
+		this.createUniform(uniformName + ".att.exponent");
+	}
+
+	public int createShader(String shaderCode, int shaderType) throws Exception {
+		int shaderId = GL20.glCreateShader(shaderType);
+		if(shaderId == 0) {
+			throw new Exception("Error creating shader. Code: " + shaderId);
+		}
+
+		GL20.glShaderSource(shaderId, shaderCode);
+		GL20.glCompileShader(shaderId);
+
+		if(GL20.glGetShaderi(shaderId, GL20.GL_COMPILE_STATUS) == 0) {
+			throw new Exception("Error compiling Shader code: " + GL20.glGetShaderInfoLog(shaderId, 1024));
+		}
+
+		GL20.glAttachShader(this.programId, shaderId);
+		return shaderId;
 	}
 
 	public void createUniform(String uniformName) throws Exception {
@@ -76,24 +110,23 @@ public class ShaderProgram {
 		GL20.glUniform1i(this.uniforms.get(uniformName).getId(), value);
 	}
 
-	public void unbind() {
-		GL20.glUseProgram(0);
+	public void setUniform(String uniformName, PointLight light) {
+		this.setUniform(uniformName + ".colour", light.getColor());
+		this.setUniform(uniformName + ".position", light.getPosition());
+		this.setUniform(uniformName + ".intensity", light.getIntensity());
+		PointLight.Attenuation att = light.getAttenuation();
+		this.setUniform(uniformName + ".att.constant", att.getConstant());
+		this.setUniform(uniformName + ".att.linear", att.getLinear());
+		this.setUniform(uniformName + ".att.exponent", att.getExponent());
 	}
 
-	protected int createShader(String shaderCode, int shaderType) throws Exception {
-		int shaderId = GL20.glCreateShader(shaderType);
-		if(shaderId == 0) {
-			throw new Exception("Error creating shader. Code: " + shaderId);
-		}
+	public void setUniform(String uniformName, Material material) {
+		this.setUniform(uniformName + ".colour", material.getColour());
+		this.setUniform(uniformName + ".useColour", material.isTextured() ? 0 : 1);
+		this.setUniform(uniformName + ".reflectance", material.getReflectance());
+	}
 
-		GL20.glShaderSource(shaderId, shaderCode);
-		GL20.glCompileShader(shaderId);
-
-		if(GL20.glGetShaderi(shaderId, GL20.GL_COMPILE_STATUS) == 0) {
-			throw new Exception("Error compiling Shader code: " + GL20.glGetShaderInfoLog(shaderId, 1024));
-		}
-
-		GL20.glAttachShader(this.programId, shaderId);
-		return shaderId;
+	public void unbind() {
+		GL20.glUseProgram(0);
 	}
 }

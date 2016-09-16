@@ -9,6 +9,7 @@ public class Model {
 
 	private final int colourVboId;
 	private final int indexVboId;
+	private final Material material;
 	private final Texture texture;
 	private final int vaoId;
 	private final int vboId;
@@ -52,6 +53,7 @@ public class Model {
 		this.vboId = 0;
 		this.vertexCount = 0;
 		this.texture = null;
+		this.material = null;
 	}
 
 	public void destroy() {
@@ -71,6 +73,10 @@ public class Model {
 		GL30.glBindVertexArray(0);
 
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+	}
+
+	public Material getMaterial() {
+		return this.material;
 	}
 
 	public void render() {
