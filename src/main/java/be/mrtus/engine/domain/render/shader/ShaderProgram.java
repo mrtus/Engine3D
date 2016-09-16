@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
@@ -74,6 +75,10 @@ public class ShaderProgram {
 
 	public void setUniform(String uniformName, int value) {
 		GL20.glUniform1i(this.uniforms.get(uniformName).getId(), value);
+	}
+
+	public void setUniform(String uniformName, Vector3f vector) {
+		GL20.glUniform3f(this.uniforms.get(uniformName).getId(), vector.x, vector.y, vector.z);
 	}
 
 	public void unbind() {

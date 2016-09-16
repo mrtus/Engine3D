@@ -1,7 +1,6 @@
 package be.mrtus.engine.demo.domain.render.model;
 
 import be.mrtus.engine.domain.render.Model;
-import be.mrtus.engine.domain.render.Texture;
 
 public class CubeModel extends Model {
 
@@ -76,7 +75,7 @@ public class CubeModel extends Model {
 			1.0f, 0.0f,
 			0.5f, 0.5f,
 			1.0f, 0.5f
-		}, new int[]{
+		}, null, new int[]{
 			// Front face
 			0, 1, 3, 3, 1, 2,
 			// Top Face

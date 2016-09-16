@@ -43,6 +43,8 @@ public class Renderer {
 		this.shaderProgram.createUniform("projectionMatrix");
 		this.shaderProgram.createUniform("modelViewMatrix");
 		this.shaderProgram.createUniform("texture_sampler");
+		this.shaderProgram.createUniform("colour");
+		this.shaderProgram.createUniform("useColour");
 	}
 
 	public String loadResource(String fileName) throws Exception {
@@ -64,6 +66,8 @@ public class Renderer {
 
 	public void renderModel(Model model, List<Entity> entities, Matrix4f viewMatrix) {
 		this.shaderProgram.setUniform("texture_sampler", 0);
+		this.shaderProgram.setUniform("colour", model.getColour());
+		this.shaderProgram.setUniform("useColour", model.isTextured() ? 0 : 1);
 
 		model.startRender();
 		entities.forEach(entity -> {
