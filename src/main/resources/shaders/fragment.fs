@@ -1,26 +1,29 @@
 #version 330
 
+in vec2 outTextCoord;
+in vec3 mvVertexNormal;
+in vec3 mvVertexPos;
+
+out vec4 fragColor;
+
 struct Attenuation{
 	float constant;
 	float linear;
 	float exponent;
-}
+};
 
 struct PointLight{
 	vec3 colour;
 	vec3 position;
 	float intensity;
 	Attenuation att;
-}
+};
 
 struct Material{
 	vec3 colour;
 	int useColour;
 	float reflectance;
-}
-
-in vec2 outTextCoord;
-out vec4 fragColor;
+};
 
 uniform sampler2D texture_sampler;
 uniform vec3 ambientLight;
@@ -28,20 +31,6 @@ uniform float specularPower;
 uniform Material material;
 uniform PointLight pointLight;
 uniform vec3 camera_pos;
-
-void main(){
-	vec4 baseColour;
-	if(material.useColour == 1){
-		baseColour = vec4(material.colour, 1);
-	}else{
-		baseColour = texture(texture_sampler, outTextCoord);
-	}
-	vec4 lightColour = calcPointLight(pointLight, mvVertexPos, mvVertexNormal);
-	vec4 totalLight = vec4(ambientLight, 1.0);
-	totalLight += lightColour;
-
-	fragColor = baseColour * totalLight;
-}
 
 vec4 calcPointLight(PointLight light, vec3 position, vec3 normal){
 	vec4 diffuseColour = vec4(0, 0, 0, 0);
@@ -55,11 +44,25 @@ vec4 calcPointLight(PointLight light, vec3 position, vec3 normal){
 	vec3 camera_direction = normalize(-position);
 	vec3 from_light_source = -to_light_source;
 	vec3 reflected_light = normalize(reflect(from_light_source, normal));
-	float specularFactor = max(dot(camera_direction, reflect_light), 0.0);
+	float specularFactor = max(dot(camera_direction, reflected_light), 0.0);
 	specularFactor = pow(specularFactor, specularPower);
 	specColour = specularFactor * material.reflectance * vec4(light.colour, 1.0);
 
-	float distance = light(light_direction);
+	float distance = length(light_direction);
 	float attenuationInv = light.att.constant + light.att.linear * distance + light.att.exponent * distance * distance;
 	return (diffuseColour + specColour) / attenuationInv;
+}
+
+void main(){
+	vec4 baseColour;
+	if(material.useColour == 1){
+		baseColour = vec4(material.colour, 1);
+	}else{
+		baseColour = texture(texture_sampler, outTextCoord);
+	}
+	vec4 lightColour = calcPointLight(pointLight, mvVertexPos, mvVertexNormal);
+	vec4 totalLight = vec4(ambientLight, 1.0);
+	totalLight += lightColour;
+
+	fragColor = baseColour * totalLight;
 }

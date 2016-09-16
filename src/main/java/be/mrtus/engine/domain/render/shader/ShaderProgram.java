@@ -119,12 +119,10 @@ public class ShaderProgram {
 		this.setUniform(uniformName + ".att.constant", att.getConstant());
 		this.setUniform(uniformName + ".att.linear", att.getLinear());
 		this.setUniform(uniformName + ".att.exponent", att.getExponent());
-	public void setUniform(String uniformName, Vector3f vector) {
-		GL20.glUniform3f(this.uniforms.get(uniformName).getId(), vector.x, vector.y, vector.z);
 	}
 
-	public void unbind() {
-		GL20.glUseProgram(0);
+	public void setUniform(String uniformName, Vector3f vector) {
+		GL20.glUniform3f(this.uniforms.get(uniformName).getId(), vector.x, vector.y, vector.z);
 	}
 
 	public void setUniform(String uniformName, Material material) {

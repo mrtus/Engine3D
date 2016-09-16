@@ -11,8 +11,7 @@ public class Model {
 	private Vector3f colour;
 	private final int colourVboId;
 	private final int indexVboId;
-	private final Material material;
-	private final Texture texture;
+	private Material material;
 	private final int normalsVboId;
 	private Texture texture;
 	private final int vaoId;
@@ -45,6 +44,7 @@ public class Model {
 		vecNormalsBuffer.put(normals).flip();
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.normalsVboId);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vecNormalsBuffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 0, 0);
 
 		this.indexVboId = GL15.glGenBuffers();
 		IntBuffer indicesBuffer = BufferUtils.createIntBuffer(indices.length);
@@ -62,8 +62,6 @@ public class Model {
 		this.vaoId = 0;
 		this.vboId = 0;
 		this.vertexCount = 0;
-		this.texture = null;
-		this.material = null;
 	}
 
 	public void destroy() {
@@ -97,16 +95,16 @@ public class Model {
 		return this.colour;
 	}
 
+	public Material getMaterial() {
+		return this.material;
+	}
+
 	public void setTexture(Texture texture) {
 		this.texture = texture;
 	}
 
 	public boolean isTextured() {
 		return this.texture != null;
-	}
-
-	public Material getMaterial() {
-		return this.material;
 	}
 
 	public void render() {
