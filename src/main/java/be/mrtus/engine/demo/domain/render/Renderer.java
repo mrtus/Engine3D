@@ -9,7 +9,6 @@ import be.mrtus.engine.domain.scene.entity.Entity;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
@@ -81,8 +80,7 @@ public class Renderer {
 		if(showWireFrame) {
 			GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_LINE);
 		}
-		Map<Model, List<Entity>> modelEntities = scene.getEntityModels();
-		modelEntities.forEach((model, entities) -> this.renderModel(model, entities, viewMatrix));
+		scene.getEntityModels().forEach((model, entities) -> this.renderModel(model, entities, viewMatrix));
 		if(showWireFrame) {
 			GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_FILL);
 		}
