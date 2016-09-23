@@ -1,9 +1,9 @@
 package be.mrtus.engine.domain;
 
-import be.mrtus.engine.domain.scene.Scene;
 import be.mrtus.engine.domain.input.Keyboard;
 import be.mrtus.engine.domain.input.Mouse;
 import be.mrtus.engine.domain.scene.Camera;
+import be.mrtus.engine.domain.scene.Scene;
 
 public interface Game {
 
@@ -18,4 +18,8 @@ public interface Game {
 	public void render(float alpha);
 
 	public void update();
+
+	public void initKeyboardKeys();
+
+	public void initMouseButtons();
 }
