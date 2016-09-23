@@ -1,11 +1,11 @@
 package be.mrtus.engine.domain.scene;
 
+import be.mrtus.engine.domain.input.Button;
 import be.mrtus.engine.domain.input.Keyboard;
 import be.mrtus.engine.domain.input.Mouse;
 import be.mrtus.engine.domain.scene.entity.component.EntityController;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.lwjgl.glfw.GLFW;
 
 public class CameraController extends EntityController<Camera> {
 
@@ -45,19 +45,19 @@ public class CameraController extends EntityController<Camera> {
 		this.moveRotation(deltaPos.x, deltaPos.y, 0);
 
 		this.move.set(0, 0, 0);
-		if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_W)) {
+		if(this.keyboard.isKeyPressed(Button.FORWARD)) {
 			this.move.z = -1;
-		} else if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_S)) {
+		} else if(this.keyboard.isKeyPressed(Button.BACKWARD)) {
 			this.move.z = 1;
 		}
-		if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_A)) {
+		if(this.keyboard.isKeyPressed(Button.LEFT)) {
 			this.move.x = -1;
-		} else if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_D)) {
+		} else if(this.keyboard.isKeyPressed(Button.RIGHT)) {
 			this.move.x = 1;
 		}
-		if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_LEFT_CONTROL)) {
+		if(this.keyboard.isKeyPressed(Button.DOWN)) {
 			this.move.y = -1;
-		} else if(this.keyboard.isKeyPressed(GLFW.GLFW_KEY_SPACE)) {
+		} else if(this.keyboard.isKeyPressed(Button.UP)) {
 			this.move.y = 1;
 		}
 		this.movePosition(this.move.x * 0.1f, this.move.y * 0.1f, this.move.z * 0.1f);
