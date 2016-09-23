@@ -77,12 +77,15 @@ public class Renderer {
 	private void renderScene(Scene scene, Matrix4f projectionMatrix, Matrix4f viewMatrix) {
 		this.shaderProgram.bind();
 		this.shaderProgram.setUniform("projectionMatrix", projectionMatrix);
-
-//		GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_LINE);
+		boolean showWireFrame = false;
+		if(showWireFrame) {
+			GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_LINE);
+		}
 		Map<Model, List<Entity>> modelEntities = scene.getEntityModels();
 		modelEntities.forEach((model, entities) -> this.renderModel(model, entities, viewMatrix));
-
-//		GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_FILL);
+		if(showWireFrame) {
+			GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_FILL);
+		}
 		this.shaderProgram.unbind();
 	}
 }
