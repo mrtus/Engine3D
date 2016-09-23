@@ -41,6 +41,7 @@ public class Keyboard {
 		this.keyInputs.put(Button.RIGHT, GLFW.GLFW_KEY_D);
 		this.keyInputs.put(Button.UP, GLFW.GLFW_KEY_SPACE);
 		this.keyInputs.put(Button.DOWN, GLFW.GLFW_KEY_LEFT_CONTROL);
+		this.keyInputs.put(Button.RESET_POS, GLFW.GLFW_KEY_R);
 	}
 
 //	public boolean isKeyPressed(int key) {

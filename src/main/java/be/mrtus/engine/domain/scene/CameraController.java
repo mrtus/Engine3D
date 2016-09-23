@@ -41,7 +41,7 @@ public class CameraController extends EntityController<Camera> {
 
 	@Override
 	public void update() {
-		if(this.mouse.isMiddleButtonPressed()) {
+		if(this.keyboard.isKeyPressed(Button.RESET_POS)) {
 			this.entity.reset();
 		}
 
