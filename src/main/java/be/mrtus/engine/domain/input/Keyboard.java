@@ -12,7 +12,7 @@ public class Keyboard {
 
 	private final Display display;
 	private GLFWKeyCallback keyCallback;
-	private Map<Button, Integer> keyInputs = new HashMap<>();
+	private Map<String, Integer> keyInputs = new HashMap<>();
 	private final List<KeyListener> keyListeners = new ArrayList<>();
 
 	public Keyboard(Display display) {
@@ -34,21 +34,13 @@ public class Keyboard {
 				onKeyInvoked(key, action, mods);
 			}
 		});
-
-		this.keyInputs.put(Button.FORWARD, GLFW.GLFW_KEY_W);
-		this.keyInputs.put(Button.BACKWARD, GLFW.GLFW_KEY_S);
-		this.keyInputs.put(Button.LEFT, GLFW.GLFW_KEY_A);
-		this.keyInputs.put(Button.RIGHT, GLFW.GLFW_KEY_D);
-		this.keyInputs.put(Button.UP, GLFW.GLFW_KEY_SPACE);
-		this.keyInputs.put(Button.DOWN, GLFW.GLFW_KEY_LEFT_CONTROL);
-		this.keyInputs.put(Button.RESET_POS, GLFW.GLFW_KEY_R);
 	}
 
 //	public boolean isKeyPressed(int key) {
 //		return GLFW.glfwGetKey(this.display.getDisplayId(), key) == GLFW.GLFW_PRESS;
 //	}
-	public boolean isKeyPressed(Button button) {
-		return GLFW.glfwGetKey(this.display.getDisplayId(), this.keyInputs.get(button)) == GLFW.GLFW_PRESS;
+	public boolean isKeyPressed(String action) {
+		return GLFW.glfwGetKey(this.display.getDisplayId(), this.keyInputs.get(action)) == GLFW.GLFW_PRESS;
 	}
 
 	public void removeKeyListener(KeyListener listener) {
@@ -57,5 +49,9 @@ public class Keyboard {
 
 	private void onKeyInvoked(int key, int action, int modifier) {
 		this.keyListeners.forEach(l -> l.keyPressed(key, action, modifier));
+	}
+
+	public void setKey(String action, int key) {
+		this.keyInputs.put(action, key);
 	}
 }

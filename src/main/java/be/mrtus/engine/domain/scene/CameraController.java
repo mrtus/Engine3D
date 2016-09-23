@@ -1,6 +1,5 @@
 package be.mrtus.engine.domain.scene;
 
-import be.mrtus.engine.domain.input.Button;
 import be.mrtus.engine.domain.input.Keyboard;
 import be.mrtus.engine.domain.input.Mouse;
 import be.mrtus.engine.domain.scene.entity.component.EntityController;
@@ -41,7 +40,7 @@ public class CameraController extends EntityController<Camera> {
 
 	@Override
 	public void update() {
-		if(this.keyboard.isKeyPressed(Button.RESET_POS)) {
+		if(this.keyboard.isKeyPressed("reset_pos")) {
 			this.entity.reset();
 		}
 
@@ -49,19 +48,19 @@ public class CameraController extends EntityController<Camera> {
 		this.moveRotation(deltaPos.x, deltaPos.y, 0);
 
 		this.move.set(0, 0, 0);
-		if(this.keyboard.isKeyPressed(Button.FORWARD)) {
+		if(this.keyboard.isKeyPressed("forward")) {
 			this.move.z = -1;
-		} else if(this.keyboard.isKeyPressed(Button.BACKWARD)) {
+		} else if(this.keyboard.isKeyPressed("backward")) {
 			this.move.z = 1;
 		}
-		if(this.keyboard.isKeyPressed(Button.LEFT)) {
+		if(this.keyboard.isKeyPressed("left")) {
 			this.move.x = -1;
-		} else if(this.keyboard.isKeyPressed(Button.RIGHT)) {
+		} else if(this.keyboard.isKeyPressed("right")) {
 			this.move.x = 1;
 		}
-		if(this.keyboard.isKeyPressed(Button.DOWN)) {
+		if(this.keyboard.isKeyPressed("down")) {
 			this.move.y = -1;
-		} else if(this.keyboard.isKeyPressed(Button.UP)) {
+		} else if(this.keyboard.isKeyPressed("up")) {
 			this.move.y = 1;
 		}
 		this.movePosition(this.move.x * 0.1f, this.move.y * 0.1f, this.move.z * 0.1f);

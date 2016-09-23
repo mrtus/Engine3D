@@ -42,19 +42,32 @@ public class DemoGame implements Game, KeyListener {
 	public void init(Display display, Keyboard keyboard, Mouse mouse) throws Exception {
 		this.display = display;
 		this.keyboard = keyboard;
-		this.mouse = mouse;
 		this.keyboard.addKeyListener(this);
+		this.mouse = mouse;
 		this.scene = new Scene();
-		this.camera = new Camera(keyboard, mouse);
+		this.camera = new Camera(this.keyboard, this.mouse);
 		this.renderer = new Renderer();
 		this.renderer.init();
 	}
 
 	@Override
+	public void initKeyboardKeys() {
+		this.keyboard.setKey("forward", GLFW.GLFW_KEY_W);
+		this.keyboard.setKey("backward", GLFW.GLFW_KEY_S);
+		this.keyboard.setKey("left", GLFW.GLFW_KEY_A);
+		this.keyboard.setKey("right", GLFW.GLFW_KEY_D);
+		this.keyboard.setKey("up", GLFW.GLFW_KEY_SPACE);
+		this.keyboard.setKey("down", GLFW.GLFW_KEY_LEFT_CONTROL);
+		this.keyboard.setKey("reset_pos", GLFW.GLFW_KEY_R);
+		this.keyboard.setKey("escape", GLFW.GLFW_KEY_ESCAPE);
+	}
+
+	@Override
+	public void initMouseButtons() {
+	}
+
+	@Override
 	public void keyPressed(int key, int action, int modifier) {
-		if(key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE) {
-			this.mouse.setMouseGrabbed(false);
-		}
 	}
 
 	@Override
@@ -64,6 +77,9 @@ public class DemoGame implements Game, KeyListener {
 
 	@Override
 	public void update() {
+		if(this.keyboard.isKeyPressed("escape")) {
+			this.mouse.setMouseGrabbed(false);
+		}
 		if(this.mouse.isLeftButtonPressed() && !this.mouse.isMouseGrabbed()) {
 			this.mouse.setMouseGrabbed(true);
 		}
