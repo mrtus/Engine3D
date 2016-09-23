@@ -41,6 +41,10 @@ public class CameraController extends EntityController<Camera> {
 
 	@Override
 	public void update() {
+		if(this.mouse.isMiddleButtonPressed()) {
+			this.entity.reset();
+		}
+
 		Vector2f deltaPos = this.mouse.getDeltaPos();
 		this.moveRotation(deltaPos.x, deltaPos.y, 0);
 

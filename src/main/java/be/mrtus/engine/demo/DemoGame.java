@@ -67,9 +67,6 @@ public class DemoGame implements Game, KeyListener {
 		if(this.mouse.isLeftButtonPressed() && !this.mouse.isMouseGrabbed()) {
 			this.mouse.setMouseGrabbed(true);
 		}
-		if(this.mouse.isMiddleButtonPressed()) {
-			this.camera.reset();
-		}
 
 		this.camera.update();
 		this.scene.update();
