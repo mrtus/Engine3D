@@ -16,6 +16,7 @@ public class Model {
 
 	public Model() {
 		this.vaoId = GL30.glGenVertexArrays();
+		this.texture = new Texture();
 	}
 
 	public void destroy() {
@@ -46,10 +47,8 @@ public class Model {
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
 
-		if(this.texture != null && this.texture.getId() != -1) {
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.texture.getId());
-		}
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.texture.getId());
 	}
 
 	private void setPositions(float[] positions, int[] indices) {

@@ -7,10 +7,11 @@ import org.joml.Vector3f;
 
 public class Transformation {
 
+	private final Matrix4f emptyMatrix;
 	private final Matrix4f modelViewMatrix;
 	private final Matrix4f projectionMatrix;
+	private final float rad = (float)(180 / Math.PI);
 	private final Matrix4f viewMatrix;
-	private final Matrix4f emptyMatrix;
 
 	public Transformation() {
 		this.projectionMatrix = new Matrix4f();
@@ -23,9 +24,9 @@ public class Transformation {
 		Vector3f rotation = transform.getRotation();
 		this.modelViewMatrix.identity();
 		this.modelViewMatrix.translate(transform.getPosition());
-		this.modelViewMatrix.rotateX((float)Math.toRadians(-rotation.x));
-		this.modelViewMatrix.rotateY((float)Math.toRadians(-rotation.y));
-		this.modelViewMatrix.rotateZ((float)Math.toRadians(-rotation.z));
+		this.modelViewMatrix.rotateX(-rotation.x / this.rad);
+		this.modelViewMatrix.rotateY(-rotation.y / this.rad);
+		this.modelViewMatrix.rotateZ(-rotation.z / this.rad);
 		this.modelViewMatrix.scale(transform.getScale());
 		this.emptyMatrix.identity();
 		return this.viewMatrix.mul(this.modelViewMatrix, this.emptyMatrix);
@@ -43,8 +44,9 @@ public class Transformation {
 		Vector3f position = camera.getTransform().getPosition();
 		Vector3f rotation = camera.getTransform().getRotation();
 		this.viewMatrix.identity();
-		this.viewMatrix.rotate((float)Math.toRadians(rotation.x), new Vector3f(1, 0, 0));
-		this.viewMatrix.rotate((float)Math.toRadians(rotation.y), new Vector3f(0, 1, 0));
+		this.viewMatrix.rotate(rotation.x / this.rad, 1, 0, 0);
+		this.viewMatrix.rotate(rotation.y / this.rad, 0, 1, 0);
+//		this.viewMatrix.rotate(rotation.z / this.rad, 0, 0, 1);
 		this.viewMatrix.translate(-position.x, -position.y, -position.z);
 	}
 
