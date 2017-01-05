@@ -48,7 +48,7 @@ public class DemoGame implements Game {
 		this.mouse = mouse;
 		this.camera = new Camera(this.keyboard, this.mouse);
 		this.renderer = new Renderer();
-		this.renderer.init();
+		this.renderer.init(this.display);
 		this.scene = new Scene();
 	}
 
@@ -73,7 +73,6 @@ public class DemoGame implements Game {
 		this.renderer.clear();
 		if(this.display.isResized()) {
 			GL11.glViewport(0, 0, this.display.getWidth(), this.display.getHeight());
-			this.display.setResized(false);
 		}
 		this.renderer.render(this.display, this.camera, this.scene, alpha);
 	}

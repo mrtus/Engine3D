@@ -147,6 +147,9 @@ public class Display {
 	}
 
 	public void update() {
+		if(this.isResized()) {
+			this.setResized(false);
+		}
 		GLFW.glfwSwapBuffers(this.id);
 		GLFW.glfwPollEvents();
 	}

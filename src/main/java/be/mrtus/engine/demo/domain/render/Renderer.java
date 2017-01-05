@@ -34,7 +34,7 @@ public class Renderer {
 		}
 	}
 
-	public void init() throws Exception {
+	public void init(Display display) throws Exception {
 		this.shaderProgram = new ShaderProgram();
 		this.shaderProgram.createVertexShader(this.loadResource("/shaders/vertex.vs"));
 		this.shaderProgram.createFragmentShader(this.loadResource("/shaders/fragment.fs"));
@@ -42,6 +42,7 @@ public class Renderer {
 		this.shaderProgram.createUniform("projectionMatrix");
 		this.shaderProgram.createUniform("modelViewMatrix");
 		this.shaderProgram.createUniform("texture_sampler");
+		this.transformation.setProjectionMatrix(this.FOV, display.getWidth(), display.getHeight(), this.Z_NEAR, this.Z_FAR);
 	}
 
 	public String loadResource(String fileName) throws Exception {
@@ -49,34 +50,36 @@ public class Renderer {
 	}
 
 	public void render(Display display, Camera camera, Scene scene, float alpha) {
-		Matrix4f projectionMatrix = this.transformation.getProjectionMatrix(this.FOV, display.getWidth(), display.getHeight(), this.Z_NEAR, this.Z_FAR);
-		Matrix4f viewMatrix = this.transformation.getViewMatrix(camera);
-		this.renderScene(scene, projectionMatrix, viewMatrix);
+		if(display.isResized()) {
+			this.transformation.setProjectionMatrix(this.FOV, display.getWidth(), display.getHeight(), this.Z_NEAR, this.Z_FAR);
+		}
+		this.transformation.setViewMatrix(camera);
+		this.shaderProgram.bind();
+		this.shaderProgram.setUniform("projectionMatrix", this.transformation.getProjectionMatrix());
+		this.renderScene(scene);
+		this.shaderProgram.unbind();
 	}
 
-	public void renderModel(Model model, List<Entity> entities, Matrix4f viewMatrix) {
+	public void renderModel(Model model, List<Entity> entities) {
 		this.shaderProgram.setUniform("texture_sampler", 0);
 
 		model.startRender();
 		entities.forEach(entity -> {
-			Matrix4f modelViewMatrix = this.transformation.getModelViewMatrix(entity.getTransform(), viewMatrix);
+			Matrix4f modelViewMatrix = this.transformation.getModelViewMatrix(entity.getTransform());
 			this.shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
 			model.render();
 		});
 		model.endRender();
 	}
 
-	private void renderScene(Scene scene, Matrix4f projectionMatrix, Matrix4f viewMatrix) {
-		this.shaderProgram.bind();
-		this.shaderProgram.setUniform("projectionMatrix", projectionMatrix);
+	private void renderScene(Scene scene) {
 		boolean showWireFrame = false;
 		if(showWireFrame) {
 			GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_LINE);
 		}
-		scene.getEntityModels().forEach((model, entities) -> this.renderModel(model, entities, viewMatrix));
+		scene.getEntityModels().forEach((model, entities) -> this.renderModel(model, entities));
 		if(showWireFrame) {
 			GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_FILL);
 		}
-		this.shaderProgram.unbind();
 	}
 }
