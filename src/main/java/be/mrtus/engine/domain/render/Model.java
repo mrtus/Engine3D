@@ -10,7 +10,7 @@ public class Model {
 	private int colourVboId;
 	private int indexVboId;
 	private Texture texture;
-	private int vaoId;
+	private final int vaoId;
 	private int vboId;
 	private int vertexCount;
 
