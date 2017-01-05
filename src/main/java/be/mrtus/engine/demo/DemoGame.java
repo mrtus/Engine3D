@@ -5,14 +5,13 @@ import be.mrtus.engine.demo.domain.render.Renderer;
 import be.mrtus.engine.domain.Display;
 import be.mrtus.engine.domain.Game;
 import be.mrtus.engine.domain.GameEngine;
-import be.mrtus.engine.domain.input.KeyListener;
 import be.mrtus.engine.domain.input.Keyboard;
 import be.mrtus.engine.domain.input.Mouse;
 import be.mrtus.engine.domain.scene.Camera;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
-public class DemoGame implements Game, KeyListener {
+public class DemoGame implements Game {
 
 	public static void main(String[] args) {
 		new GameEngine(new DemoGame(), "GameEngine 3D", 800, 600, false, false).start();
@@ -46,7 +45,6 @@ public class DemoGame implements Game, KeyListener {
 	public void init(Display display, Keyboard keyboard, Mouse mouse) throws Exception {
 		this.display = display;
 		this.keyboard = keyboard;
-		this.keyboard.addKeyListener(this);
 		this.mouse = mouse;
 		this.camera = new Camera(this.keyboard, this.mouse);
 		this.renderer = new Renderer();
@@ -56,22 +54,18 @@ public class DemoGame implements Game, KeyListener {
 
 	@Override
 	public void initKeyboardKeys() {
-		this.keyboard.setKey("forward", GLFW.GLFW_KEY_W);
-		this.keyboard.setKey("backward", GLFW.GLFW_KEY_S);
-		this.keyboard.setKey("left", GLFW.GLFW_KEY_A);
-		this.keyboard.setKey("right", GLFW.GLFW_KEY_D);
-		this.keyboard.setKey("up", GLFW.GLFW_KEY_SPACE);
-		this.keyboard.setKey("down", GLFW.GLFW_KEY_LEFT_CONTROL);
-		this.keyboard.setKey("reset_pos", GLFW.GLFW_KEY_R);
-		this.keyboard.setKey("escape", GLFW.GLFW_KEY_ESCAPE);
+		this.keyboard.registerKey("forward", GLFW.GLFW_KEY_W);
+		this.keyboard.registerKey("backward", GLFW.GLFW_KEY_S);
+		this.keyboard.registerKey("left", GLFW.GLFW_KEY_A);
+		this.keyboard.registerKey("right", GLFW.GLFW_KEY_D);
+		this.keyboard.registerKey("up", GLFW.GLFW_KEY_SPACE);
+		this.keyboard.registerKey("down", GLFW.GLFW_KEY_LEFT_CONTROL);
+		this.keyboard.registerKey("reset_pos", GLFW.GLFW_KEY_R);
+		this.keyboard.registerKey("escape", GLFW.GLFW_KEY_ESCAPE);
 	}
 
 	@Override
 	public void initMouseButtons() {
-	}
-
-	@Override
-	public void keyPressed(int key, int action, int modifier) {
 	}
 
 	@Override

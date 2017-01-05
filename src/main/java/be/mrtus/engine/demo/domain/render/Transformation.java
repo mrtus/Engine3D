@@ -18,19 +18,18 @@ public class Transformation {
 	}
 
 	public final Matrix4f getProjectionMatrix(float fov, float width, float height, float zNear, float zFar) {
-		float aspectRatio = width / height;
 		this.projectionMatrix.identity();
-		this.projectionMatrix.perspective(fov, aspectRatio, zNear, zFar);
+		this.projectionMatrix.perspective(fov, width / height, zNear, zFar);
 		return this.projectionMatrix;
 	}
 
 	public Matrix4f getViewMatrix(Camera camera) {
-		Vector3f cameraPos = camera.getTransform().getPosition();
+		Vector3f position = camera.getTransform().getPosition();
 		Vector3f rotation = camera.getTransform().getRotation();
 		this.viewMatrix.identity();
 		this.viewMatrix.rotate((float)Math.toRadians(rotation.x), new Vector3f(1, 0, 0));
 		this.viewMatrix.rotate((float)Math.toRadians(rotation.y), new Vector3f(0, 1, 0));
-		this.viewMatrix.translate(-cameraPos.x, -cameraPos.y, -cameraPos.z);
+		this.viewMatrix.translate(-position.x, -position.y, -position.z);
 		return this.viewMatrix;
 	}
 

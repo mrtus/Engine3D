@@ -51,7 +51,7 @@ public class Keyboard {
 		this.keyListeners.forEach(l -> l.keyPressed(key, action, modifier));
 	}
 
-	public void setKey(String action, int key) {
+	public void registerKey(String action, int key) {
 		this.keyInputs.put(action, key);
 	}
 }
