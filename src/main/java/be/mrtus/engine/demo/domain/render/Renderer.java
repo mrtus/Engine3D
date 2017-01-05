@@ -18,6 +18,7 @@ public class Renderer {
 	private final float Z_FAR = 1000.f;
 	private final float Z_NEAR = 0.01f;
 	private ShaderProgram shaderProgram;
+	private final boolean showWireFrame = false;
 	private final Transformation transformation;
 
 	public Renderer() {
@@ -62,7 +63,6 @@ public class Renderer {
 
 	public void renderModel(Model model, List<Entity> entities) {
 		this.shaderProgram.setUniform("texture_sampler", 0);
-
 		model.startRender();
 		entities.forEach(entity -> {
 			Matrix4f modelViewMatrix = this.transformation.getModelViewMatrix(entity.getTransform());
@@ -73,12 +73,11 @@ public class Renderer {
 	}
 
 	private void renderScene(Scene scene) {
-		boolean showWireFrame = false;
-		if(showWireFrame) {
+		if(this.showWireFrame) {
 			GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_LINE);
 		}
 		scene.getEntityModels().forEach((model, entities) -> this.renderModel(model, entities));
-		if(showWireFrame) {
+		if(this.showWireFrame) {
 			GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_FILL);
 		}
 	}

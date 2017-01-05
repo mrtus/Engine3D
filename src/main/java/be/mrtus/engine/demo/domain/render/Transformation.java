@@ -22,14 +22,11 @@ public class Transformation {
 
 	public Matrix4f getModelViewMatrix(Transform transform) {
 		Vector3f rotation = transform.getRotation();
-		this.modelViewMatrix.identity();
-		this.modelViewMatrix.translate(transform.getPosition());
-		this.modelViewMatrix.rotateX(-rotation.x / this.rad);
-		this.modelViewMatrix.rotateY(-rotation.y / this.rad);
-		this.modelViewMatrix.rotateZ(-rotation.z / this.rad);
-		this.modelViewMatrix.scale(transform.getScale());
-		this.emptyMatrix.identity();
-		return this.viewMatrix.mul(this.modelViewMatrix, this.emptyMatrix);
+		this.modelViewMatrix.identity()
+				.translate(transform.getPosition())
+				.rotateXYZ(-rotation.x / this.rad, -rotation.y / this.rad, -rotation.z / this.rad)
+				.scale(transform.getScale());
+		return this.viewMatrix.mul(this.modelViewMatrix, this.emptyMatrix.identity());
 	}
 
 	public Matrix4f getProjectionMatrix() {
@@ -43,15 +40,12 @@ public class Transformation {
 	public void setViewMatrix(Camera camera) {
 		Vector3f position = camera.getTransform().getPosition();
 		Vector3f rotation = camera.getTransform().getRotation();
-		this.viewMatrix.identity();
-		this.viewMatrix.rotate(rotation.x / this.rad, 1, 0, 0);
-		this.viewMatrix.rotate(rotation.y / this.rad, 0, 1, 0);
-//		this.viewMatrix.rotate(rotation.z / this.rad, 0, 0, 1);
-		this.viewMatrix.translate(-position.x, -position.y, -position.z);
+		this.viewMatrix.identity()
+				.rotateXYZ(rotation.x / this.rad, rotation.y / this.rad, 0)
+				.translate(-position.x, -position.y, -position.z);
 	}
 
 	public void setProjectionMatrix(float fov, float width, float height, float zNear, float zFar) {
-		this.projectionMatrix.identity();
-		this.projectionMatrix.perspective(fov, width / height, zNear, zFar);
+		this.projectionMatrix.identity().perspective(fov, width / height, zNear, zFar);
 	}
 }
