@@ -8,7 +8,7 @@ import be.mrtus.engine.domain.input.KeyListener;
 import be.mrtus.engine.domain.input.Keyboard;
 import be.mrtus.engine.domain.input.Mouse;
 import be.mrtus.engine.domain.scene.Camera;
-import be.mrtus.engine.domain.scene.Scene;
+import be.mrtus.engine.demo.domain.Scene;
 import org.lwjgl.glfw.GLFW;
 
 public class DemoGame implements Game, KeyListener {

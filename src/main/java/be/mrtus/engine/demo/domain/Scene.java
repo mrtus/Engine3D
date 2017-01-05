@@ -1,4 +1,4 @@
-package be.mrtus.engine.domain.scene;
+package be.mrtus.engine.demo.domain;
 
 import be.mrtus.engine.demo.domain.entity.component.SpinningEntityController;
 import be.mrtus.engine.demo.domain.render.model.CubeModel;

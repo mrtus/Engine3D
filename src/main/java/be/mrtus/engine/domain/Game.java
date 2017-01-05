@@ -3,7 +3,7 @@ package be.mrtus.engine.domain;
 import be.mrtus.engine.domain.input.Keyboard;
 import be.mrtus.engine.domain.input.Mouse;
 import be.mrtus.engine.domain.scene.Camera;
-import be.mrtus.engine.domain.scene.Scene;
+import be.mrtus.engine.demo.domain.Scene;
 
 public interface Game {
 
