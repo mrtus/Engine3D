@@ -10,11 +10,13 @@ public class Transformation {
 	private final Matrix4f modelViewMatrix;
 	private final Matrix4f projectionMatrix;
 	private final Matrix4f viewMatrix;
+	private final Matrix4f emptyMatrix;
 
 	public Transformation() {
 		this.projectionMatrix = new Matrix4f();
 		this.modelViewMatrix = new Matrix4f();
 		this.viewMatrix = new Matrix4f();
+		this.emptyMatrix = new Matrix4f();
 	}
 
 	public Matrix4f getModelViewMatrix(Transform transform) {
@@ -25,8 +27,8 @@ public class Transformation {
 		this.modelViewMatrix.rotateY((float)Math.toRadians(-rotation.y));
 		this.modelViewMatrix.rotateZ((float)Math.toRadians(-rotation.z));
 		this.modelViewMatrix.scale(transform.getScale());
-		Matrix4f viewCurr = new Matrix4f(this.viewMatrix);
-		return viewCurr.mul(this.modelViewMatrix);
+		this.emptyMatrix.identity();
+		return this.viewMatrix.mul(this.modelViewMatrix, this.emptyMatrix);
 	}
 
 	public Matrix4f getProjectionMatrix() {
