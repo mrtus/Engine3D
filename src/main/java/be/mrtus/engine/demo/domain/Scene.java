@@ -1,8 +1,8 @@
 package be.mrtus.engine.demo.domain;
 
 import be.mrtus.engine.demo.domain.entity.component.SpinningEntityController;
-import be.mrtus.engine.demo.domain.render.model.CubeModel;
 import be.mrtus.engine.domain.render.Model;
+import be.mrtus.engine.domain.render.Texture;
 import be.mrtus.engine.domain.scene.entity.Entity;
 import be.mrtus.engine.domain.scene.entity.component.Transform;
 import java.util.ArrayList;
@@ -15,10 +15,13 @@ public class Scene {
 	private final List<Entity> entities = new ArrayList<>();
 	private final Map<Model, List<Entity>> entityModels = new HashMap<>();
 
-	public Scene() throws Exception {
+	public Scene() {
 		float x;
 		float y = 0;
-		Model cubeModel = new CubeModel();
+		Model cubeModel = new Model.ModelBuilder()
+				.setPositions(new float[]{-0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, -0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f}, new int[]{0, 1, 3, 3, 1, 2, 8, 10, 11, 9, 8, 11, 12, 13, 7, 5, 12, 7, 6, 15, 14, 6, 14, 4, 19, 18, 16, 19, 16, 17, 7, 6, 4, 7, 4, 5})
+				.setTexture(new Texture("/grassblock.png"), new float[]{0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 0.5f, 0.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.0f, 0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, 0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.5f, 0.5f, 1.0f, 0.5f})
+				.build();
 		int value = 250;
 		double pow = Math.pow(value, 2);
 		System.out.println("Creating " + pow + " entities!");

@@ -1,5 +1,6 @@
 package be.mrtus.engine.demo;
 
+import be.mrtus.engine.demo.domain.Scene;
 import be.mrtus.engine.demo.domain.render.Renderer;
 import be.mrtus.engine.domain.Display;
 import be.mrtus.engine.domain.Game;
@@ -8,8 +9,8 @@ import be.mrtus.engine.domain.input.KeyListener;
 import be.mrtus.engine.domain.input.Keyboard;
 import be.mrtus.engine.domain.input.Mouse;
 import be.mrtus.engine.domain.scene.Camera;
-import be.mrtus.engine.demo.domain.Scene;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
 
 public class DemoGame implements Game, KeyListener {
 
@@ -22,6 +23,9 @@ public class DemoGame implements Game, KeyListener {
 	private Mouse mouse;
 	private Renderer renderer;
 	private Scene scene;
+
+	public DemoGame() {
+	}
 
 	@Override
 	public void destroy() {
@@ -44,10 +48,10 @@ public class DemoGame implements Game, KeyListener {
 		this.keyboard = keyboard;
 		this.keyboard.addKeyListener(this);
 		this.mouse = mouse;
-		this.scene = new Scene();
 		this.camera = new Camera(this.keyboard, this.mouse);
 		this.renderer = new Renderer();
 		this.renderer.init();
+		this.scene = new Scene();
 	}
 
 	@Override
@@ -72,6 +76,11 @@ public class DemoGame implements Game, KeyListener {
 
 	@Override
 	public void render(float alpha) {
+		this.renderer.clear();
+		if(this.display.isResized()) {
+			GL11.glViewport(0, 0, this.display.getWidth(), this.display.getHeight());
+			this.display.setResized(false);
+		}
 		this.renderer.render(this.display, this.camera, this.scene, alpha);
 	}
 

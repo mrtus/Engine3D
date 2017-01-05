@@ -1,10 +1,10 @@
 package be.mrtus.engine.demo.domain.render;
 
+import be.mrtus.engine.demo.domain.Scene;
 import be.mrtus.engine.domain.Display;
 import be.mrtus.engine.domain.render.Model;
 import be.mrtus.engine.domain.render.shader.ShaderProgram;
 import be.mrtus.engine.domain.scene.Camera;
-import be.mrtus.engine.demo.domain.Scene;
 import be.mrtus.engine.domain.scene.entity.Entity;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -49,13 +49,6 @@ public class Renderer {
 	}
 
 	public void render(Display display, Camera camera, Scene scene, float alpha) {
-		this.clear();
-
-		if(display.isResized()) {
-			GL11.glViewport(0, 0, display.getWidth(), display.getHeight());
-			display.setResized(false);
-		}
-
 		Matrix4f projectionMatrix = this.transformation.getProjectionMatrix(this.FOV, display.getWidth(), display.getHeight(), this.Z_NEAR, this.Z_FAR);
 		Matrix4f viewMatrix = this.transformation.getViewMatrix(camera);
 		this.renderScene(scene, projectionMatrix, viewMatrix);
