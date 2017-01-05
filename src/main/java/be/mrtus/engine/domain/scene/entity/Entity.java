@@ -2,15 +2,16 @@ package be.mrtus.engine.domain.scene.entity;
 
 import be.mrtus.engine.domain.render.Model;
 import be.mrtus.engine.domain.scene.entity.component.EntityController;
+import be.mrtus.engine.domain.scene.entity.component.MovableTransform;
 import be.mrtus.engine.domain.scene.entity.component.Transform;
 import org.joml.Vector3f;
 
 public class Entity {
 
 	protected EntityController controller;
+	protected double mass = 0.0;
 	protected Model model;
 	protected Transform transform;
-	protected double mass = 0.0;
 
 	protected Entity() {
 		this(new Entity.Builder());
@@ -31,6 +32,13 @@ public class Entity {
 
 	public double getMass() {
 		return this.mass;
+	}
+
+//	public boolean isMovable() {
+//		return this.transform instanceof MovableTransform;
+//	}
+	public Model getModel() {
+		return this.model;
 	}
 
 	public void setModel(Model model) {
@@ -62,11 +70,8 @@ public class Entity {
 		}
 	}
 
-//	public boolean isMovable() {
-//		return this.transform instanceof MovableTransform;
-//	}
-	public Model getModel() {
-		return this.model;
+	public boolean isMovable() {
+		return this.transform instanceof MovableTransform;
 	}
 
 	public void update() {
