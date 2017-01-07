@@ -3,6 +3,7 @@ package be.mrtus.engine.demo.domain.render;
 import be.mrtus.engine.domain.scene.Camera;
 import be.mrtus.engine.domain.scene.entity.component.Transform;
 import org.joml.Matrix4f;
+import org.joml.Vector2i;
 import org.joml.Vector3f;
 
 public class Transformation {
@@ -26,6 +27,12 @@ public class Transformation {
 				.translate(transform.getPosition())
 				.rotateXYZ(-rotation.x / this.rad, -rotation.y / this.rad, -rotation.z / this.rad)
 				.scale(transform.getScale());
+		return this.viewMatrix.mul(this.modelViewMatrix, this.emptyMatrix.identity());
+	}
+
+	public Matrix4f getModelViewMatrix(Vector2i position) {
+		this.modelViewMatrix.identity()
+				.translate(position.x, 0, -position.y);
 		return this.viewMatrix.mul(this.modelViewMatrix, this.emptyMatrix.identity());
 	}
 

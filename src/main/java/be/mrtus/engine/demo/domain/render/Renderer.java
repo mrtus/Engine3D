@@ -2,23 +2,28 @@ package be.mrtus.engine.demo.domain.render;
 
 import be.mrtus.engine.demo.domain.Scene;
 import be.mrtus.engine.domain.Display;
+import be.mrtus.engine.domain.input.KeyListener;
 import be.mrtus.engine.domain.render.Model;
 import be.mrtus.engine.domain.render.shader.ShaderProgram;
 import be.mrtus.engine.domain.scene.Camera;
 import be.mrtus.engine.domain.scene.entity.Entity;
+import be.mrtus.engine.domain.scene.terrain.TerrainChunk;
+import be.mrtus.engine.domain.scene.terrain.TerrainModel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import org.joml.Matrix4f;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
-public class Renderer {
+public class Renderer implements KeyListener {
 
 	private final float FOV = (float)Math.toRadians(60.0f);
 	private final float Z_FAR = 1000.f;
 	private final float Z_NEAR = 0.01f;
 	private ShaderProgram shaderProgram;
-	private final boolean showWireFrame = false;
+	private boolean showWireFrame = false;
+	private ShaderProgram terrainShaderProgram;
 	private final Transformation transformation;
 
 	public Renderer() {
@@ -43,7 +48,22 @@ public class Renderer {
 		this.shaderProgram.createUniform("projectionMatrix");
 		this.shaderProgram.createUniform("modelViewMatrix");
 		this.shaderProgram.createUniform("texture_sampler");
+
+		this.terrainShaderProgram = new ShaderProgram();
+		this.terrainShaderProgram.createVertexShader(this.loadResource("/shaders/terrain/vertex.vs"));
+		this.terrainShaderProgram.createFragmentShader(this.loadResource("/shaders/terrain/fragment.fs"));
+		this.terrainShaderProgram.link();
+		this.terrainShaderProgram.createUniform("projectionMatrix");
+		this.terrainShaderProgram.createUniform("modelViewMatrix");
+
 		this.transformation.setProjectionMatrix(this.FOV, display.getWidth(), display.getHeight(), this.Z_NEAR, this.Z_FAR);
+	}
+
+	@Override
+	public void keyPressed(int key, int action, int modifier) {
+		if(key == GLFW.GLFW_KEY_F3 && action == GLFW.GLFW_RELEASE) {
+			this.showWireFrame = !this.showWireFrame;
+		}
 	}
 
 	public String loadResource(String fileName) throws Exception {
@@ -55,30 +75,55 @@ public class Renderer {
 			this.transformation.setProjectionMatrix(this.FOV, display.getWidth(), display.getHeight(), this.Z_NEAR, this.Z_FAR);
 		}
 		this.transformation.setViewMatrix(camera);
-		this.shaderProgram.bind();
-		this.shaderProgram.setUniform("projectionMatrix", this.transformation.getProjectionMatrix());
 		this.renderScene(scene);
-		this.shaderProgram.unbind();
 	}
 
 	public void renderModel(Model model, List<Entity> entities) {
 		this.shaderProgram.setUniform("texture_sampler", 0);
 		model.startRender();
-		entities.forEach(entity -> {
-			Matrix4f modelViewMatrix = this.transformation.getModelViewMatrix(entity.getTransform());
-			this.shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-			model.render();
-		});
+		entities.stream()
+				.filter(e -> e.canRender())
+				.forEach(entity -> {
+					Matrix4f modelViewMatrix = this.transformation.getModelViewMatrix(entity.getTransform());
+					this.shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+					model.render();
+				});
 		model.endRender();
+	}
+
+	public void update() {
+
 	}
 
 	private void renderScene(Scene scene) {
 		if(this.showWireFrame) {
 			GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_LINE);
 		}
+		this.shaderProgram.bind();
+		this.shaderProgram.setUniform("projectionMatrix", this.transformation.getProjectionMatrix());
 		scene.getEntityModels().forEach((model, entities) -> this.renderModel(model, entities));
+		this.shaderProgram.unbind();
+
+		this.terrainShaderProgram.bind();
+		this.terrainShaderProgram.setUniform("projectionMatrix", this.transformation.getProjectionMatrix());
+		scene.getChunks().forEach(c -> this.renderTerrain(c));
+		this.terrainShaderProgram.unbind();
 		if(this.showWireFrame) {
 			GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_FILL);
+		}
+	}
+
+	private void renderTerrain(TerrainChunk chunk) {
+		if(chunk.canRender()) {
+			TerrainModel model = chunk.getModel();
+			if(!model.isInitiated()) {
+				model.init();
+			}
+			model.startRender();
+			Matrix4f modelViewMatrix = this.transformation.getModelViewMatrix(chunk.getPosition());
+			this.shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+			model.render();
+			model.endRender();
 		}
 	}
 }

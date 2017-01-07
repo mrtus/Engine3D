@@ -1,5 +1,6 @@
 package be.mrtus.engine.domain.scene;
 
+import be.mrtus.engine.demo.domain.Scene;
 import be.mrtus.engine.domain.input.Keyboard;
 import be.mrtus.engine.domain.input.Mouse;
 import be.mrtus.engine.domain.scene.entity.Entity;
@@ -11,12 +12,12 @@ public class Camera extends Entity {
 		super(new Entity.Builder().transform(new MovableTransform.Builder().build()).controller(new CameraController(keyboard, mouse)));
 	}
 
-	@Override
-	public void update() {
-		this.controller.update();
-	}
-
 	public void reset() {
 		this.setTransform(new MovableTransform.Builder().build());
+	}
+
+	@Override
+	public void update(Scene scene) {
+		this.controller.update(scene);
 	}
 }

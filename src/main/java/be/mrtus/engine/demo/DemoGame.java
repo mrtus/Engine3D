@@ -29,6 +29,7 @@ public class DemoGame implements Game {
 	@Override
 	public void destroy() {
 		this.renderer.destroy();
+		this.scene.destroy();
 	}
 
 	@Override
@@ -48,6 +49,7 @@ public class DemoGame implements Game {
 		this.mouse = mouse;
 		this.camera = new Camera(this.keyboard, this.mouse);
 		this.renderer = new Renderer();
+		this.keyboard.addKeyListener(this.renderer);
 		this.renderer.init(this.display);
 		this.scene = new Scene();
 	}
@@ -62,6 +64,8 @@ public class DemoGame implements Game {
 		this.keyboard.registerKey("down", GLFW.GLFW_KEY_LEFT_CONTROL);
 		this.keyboard.registerKey("reset_pos", GLFW.GLFW_KEY_R);
 		this.keyboard.registerKey("escape", GLFW.GLFW_KEY_ESCAPE);
+		this.keyboard.registerKey("sprint", GLFW.GLFW_KEY_LEFT_SHIFT);
+		this.keyboard.registerKey("noclip", GLFW.GLFW_KEY_F5);
 	}
 
 	@Override
@@ -86,7 +90,7 @@ public class DemoGame implements Game {
 			this.mouse.setMouseGrabbed(true);
 		}
 
-		this.camera.update();
+		this.camera.update(this.scene);
 		this.scene.update();
 	}
 }

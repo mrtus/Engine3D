@@ -1,5 +1,6 @@
 package be.mrtus.engine.domain.scene;
 
+import be.mrtus.engine.demo.domain.Scene;
 import be.mrtus.engine.domain.input.Keyboard;
 import be.mrtus.engine.domain.input.Mouse;
 import be.mrtus.engine.domain.scene.entity.component.EntityController;
@@ -11,13 +12,16 @@ public class CameraController extends EntityController<Camera> {
 	private final Keyboard keyboard;
 	private final Mouse mouse;
 	private final Vector3f move = new Vector3f();
+	private boolean noclip = false;
+	private final float speed = 0.2f;
+	private int sprint = 1;
 
 	public CameraController(Keyboard keyboard, Mouse mouse) {
 		this.keyboard = keyboard;
 		this.mouse = mouse;
 	}
 
-	public void movePosition(float offsetX, float offsetY, float offsetZ) {
+	public void movePosition(Scene scene, float offsetX, float offsetY, float offsetZ) {
 		Vector3f position = this.entity.getPosition();
 		Vector3f rotation = this.entity.getTransform().getRotation();
 		if(offsetZ != 0) {
@@ -28,7 +32,11 @@ public class CameraController extends EntityController<Camera> {
 			position.x += (float)Math.sin(Math.toRadians(rotation.y - 90)) * -offsetX;
 			position.z += (float)Math.cos(Math.toRadians(rotation.y - 90)) * offsetX;
 		}
-		position.y += offsetY;
+		if(this.noclip) {
+			position.y += offsetY;
+		} else {
+			position.y = scene.calculateTerrainHeight(position);
+		}
 	}
 
 	public void moveRotation(float offsetX, float offsetY, float offsetZ) {
@@ -39,9 +47,17 @@ public class CameraController extends EntityController<Camera> {
 	}
 
 	@Override
-	public void update() {
+	public void update(Scene scene) {
 		if(this.keyboard.isKeyPressed("reset_pos")) {
 			this.entity.reset();
+		}
+		if(this.keyboard.isKeyPressed("sprint")) {
+			this.sprint = 5;
+		} else {
+			this.sprint = 1;
+		}
+		if(this.keyboard.isKeyPressed("noclip")) {
+			this.noclip = !this.noclip;
 		}
 
 		Vector2f deltaPos = this.mouse.getDeltaPos();
@@ -58,11 +74,13 @@ public class CameraController extends EntityController<Camera> {
 		} else if(this.keyboard.isKeyPressed("right")) {
 			this.move.x = 1;
 		}
-		if(this.keyboard.isKeyPressed("down")) {
-			this.move.y = -1;
-		} else if(this.keyboard.isKeyPressed("up")) {
-			this.move.y = 1;
+		if(this.noclip) {
+			if(this.keyboard.isKeyPressed("down")) {
+				this.move.y = -1;
+			} else if(this.keyboard.isKeyPressed("up")) {
+				this.move.y = 1;
+			}
 		}
-		this.movePosition(this.move.x * 0.1f, this.move.y * 0.1f, this.move.z * 0.1f);
+		this.movePosition(scene, this.move.x * this.speed * this.sprint, this.move.y * this.speed * this.sprint, this.move.z * this.speed * this.sprint);
 	}
 }
