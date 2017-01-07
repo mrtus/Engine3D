@@ -12,13 +12,14 @@ import be.mrtus.engine.domain.scene.terrain.TerrainModel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import org.apache.commons.math3.util.FastMath;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 public class Renderer implements KeyListener {
 
-	private final float FOV = (float)Math.toRadians(60.0f);
+	private final float FOV = (float)FastMath.toRadians(60.0f);
 	private final float Z_FAR = 1000.f;
 	private final float Z_NEAR = 0.01f;
 	private ShaderProgram shaderProgram;

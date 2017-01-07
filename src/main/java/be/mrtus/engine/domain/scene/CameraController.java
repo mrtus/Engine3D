@@ -4,39 +4,41 @@ import be.mrtus.engine.demo.domain.Scene;
 import be.mrtus.engine.domain.input.Keyboard;
 import be.mrtus.engine.domain.input.Mouse;
 import be.mrtus.engine.domain.scene.entity.component.EntityController;
+import org.apache.commons.math3.util.FastMath;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class CameraController extends EntityController<Camera> {
 
-	private final double RAD = 180 / Math.PI;
 	private final Keyboard keyboard;
 	private final Mouse mouse;
 	private final Vector3f move = new Vector3f();
 	private boolean noclip = false;
+	private final Scene scene;
 	private final float speed = 0.2f;
 	private int sprint = 1;
 
-	public CameraController(Keyboard keyboard, Mouse mouse) {
+	public CameraController(Keyboard keyboard, Mouse mouse, Scene scene) {
 		this.keyboard = keyboard;
 		this.mouse = mouse;
+		this.scene = scene;
 	}
 
-	public void movePosition(Scene scene, float offsetX, float offsetY, float offsetZ) {
+	public void movePosition(float offsetX, float offsetY, float offsetZ) {
 		Vector3f position = this.entity.getPosition();
 		Vector3f rotation = this.entity.getTransform().getRotation();
 		if(offsetZ != 0) {
-			position.x += (float)Math.sin(rotation.y / this.RAD) * -offsetZ;
-			position.z += (float)Math.cos(rotation.y / this.RAD) * offsetZ;
+			position.x += (float)FastMath.sin(FastMath.toRadians(rotation.y)) * -offsetZ;
+			position.z += (float)FastMath.cos(FastMath.toRadians(rotation.y)) * offsetZ;
 		}
 		if(offsetX != 0) {
-			position.x += (float)Math.sin(rotation.y - 90 / this.RAD) * -offsetX;
-			position.z += (float)Math.cos(rotation.y - 90 / this.RAD) * offsetX;
+			position.x += (float)FastMath.sin(FastMath.toRadians(rotation.y - 90)) * -offsetX;
+			position.z += (float)FastMath.cos(FastMath.toRadians(rotation.y - 90)) * offsetX;
 		}
 		if(this.noclip) {
 			position.y += offsetY;
-		} else {
-			position.y = scene.calculateTerrainHeight(position);
+		} else if(offsetX != 0 || offsetZ != 0) {
+			position.y = this.scene.calculateTerrainHeight(position) + 1.80f;
 		}
 	}
 
@@ -48,7 +50,7 @@ public class CameraController extends EntityController<Camera> {
 	}
 
 	@Override
-	public void update(Scene scene) {
+	public void update() {
 		if(this.keyboard.isKeyPressed("reset_pos")) {
 			this.entity.reset();
 		}
@@ -85,6 +87,6 @@ public class CameraController extends EntityController<Camera> {
 		float moveX = this.move.x * this.speed * this.sprint;
 		float moveY = this.move.y * this.speed * this.sprint;
 		float moveZ = this.move.z * this.speed * this.sprint;
-		this.movePosition(scene, moveX, moveY, moveZ);
+		this.movePosition(moveX, moveY, moveZ);
 	}
 }

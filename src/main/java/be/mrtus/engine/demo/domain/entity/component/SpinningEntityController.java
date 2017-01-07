@@ -1,6 +1,5 @@
 package be.mrtus.engine.demo.domain.entity.component;
 
-import be.mrtus.engine.demo.domain.Scene;
 import be.mrtus.engine.domain.scene.entity.component.EntityController;
 import be.mrtus.engine.domain.scene.entity.component.Transform;
 import org.joml.Vector3f;
@@ -18,7 +17,7 @@ public class SpinningEntityController extends EntityController {
 	}
 
 	@Override
-	public void update(Scene scene) {
+	public void update() {
 		Transform transform = this.entity.getTransform();
 		Vector3f rotation = new Vector3f();
 		rotation.x = transform.getRotation().x + this.angleSpeed.x;

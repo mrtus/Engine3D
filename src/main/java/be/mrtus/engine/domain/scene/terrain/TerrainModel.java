@@ -2,7 +2,6 @@ package be.mrtus.engine.domain.scene.terrain;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.Random;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 
@@ -124,8 +123,8 @@ public class TerrainModel {
 
 		private float[] calculateColours(float[] positions) {
 			float[] colours = new float[positions.length];
-			Random random = new Random();
-			float rgb = 0.015f;
+//			Random random = new Random();
+			float rgb = 0.0175f;
 			for (int i = 0; i < colours.length; i += 3) {
 //				colours[i] = random.nextFloat();
 //				colours[i + 1] = random.nextFloat();

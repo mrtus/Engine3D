@@ -2,6 +2,7 @@ package be.mrtus.engine.demo.domain.render;
 
 import be.mrtus.engine.domain.scene.Camera;
 import be.mrtus.engine.domain.scene.entity.component.Transform;
+import org.apache.commons.math3.util.FastMath;
 import org.joml.Matrix4f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
@@ -11,7 +12,6 @@ public class Transformation {
 	private final Matrix4f emptyMatrix;
 	private final Matrix4f modelViewMatrix;
 	private final Matrix4f projectionMatrix;
-	private final float rad = (float)(180 / Math.PI);
 	private final Matrix4f viewMatrix;
 
 	public Transformation() {
@@ -25,14 +25,14 @@ public class Transformation {
 		Vector3f rotation = transform.getRotation();
 		this.modelViewMatrix.identity()
 				.translate(transform.getPosition())
-				.rotateXYZ(-rotation.x / this.rad, -rotation.y / this.rad, -rotation.z / this.rad)
+				.rotateXYZ((float)FastMath.toRadians(rotation.x), (float)FastMath.toRadians(rotation.y), (float)FastMath.toRadians(rotation.z))
 				.scale(transform.getScale());
 		return this.viewMatrix.mul(this.modelViewMatrix, this.emptyMatrix.identity());
 	}
 
 	public Matrix4f getModelViewMatrix(Vector2i position) {
 		this.modelViewMatrix.identity()
-				.translate(position.x, 0, -position.y);
+				.translate(position.x, 0, position.y);
 		return this.viewMatrix.mul(this.modelViewMatrix, this.emptyMatrix.identity());
 	}
 
@@ -48,7 +48,7 @@ public class Transformation {
 		Vector3f position = camera.getTransform().getPosition();
 		Vector3f rotation = camera.getTransform().getRotation();
 		this.viewMatrix.identity()
-				.rotateXYZ(rotation.x / this.rad, rotation.y / this.rad, 0)
+				.rotateXYZ((float)FastMath.toRadians(rotation.x), (float)FastMath.toRadians(rotation.y), 0)
 				.translate(-position.x, -position.y, -position.z);
 	}
 

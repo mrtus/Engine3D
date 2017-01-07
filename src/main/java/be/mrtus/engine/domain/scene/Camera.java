@@ -8,8 +8,8 @@ import be.mrtus.engine.domain.scene.entity.component.MovableTransform;
 
 public class Camera extends Entity {
 
-	public Camera(Keyboard keyboard, Mouse mouse) {
-		super(new Entity.Builder().transform(new MovableTransform.Builder().build()).controller(new CameraController(keyboard, mouse)));
+	public Camera(Keyboard keyboard, Mouse mouse, Scene scene) {
+		super(new Entity.Builder().transform(new MovableTransform.Builder().build()).controller(new CameraController(keyboard, mouse, scene)));
 	}
 
 	public void reset() {
@@ -17,7 +17,7 @@ public class Camera extends Entity {
 	}
 
 	@Override
-	public void update(Scene scene) {
-		this.controller.update(scene);
+	public void update() {
+		this.controller.update();
 	}
 }

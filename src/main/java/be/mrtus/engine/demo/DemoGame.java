@@ -47,11 +47,11 @@ public class DemoGame implements Game {
 		this.display = display;
 		this.keyboard = keyboard;
 		this.mouse = mouse;
-		this.camera = new Camera(this.keyboard, this.mouse);
+		this.scene = new Scene();
+		this.camera = new Camera(this.keyboard, this.mouse, this.scene);
 		this.renderer = new Renderer();
 		this.keyboard.addKeyListener(this.renderer);
 		this.renderer.init(this.display);
-		this.scene = new Scene();
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class DemoGame implements Game {
 			this.mouse.setMouseGrabbed(true);
 		}
 
-		this.camera.update(this.scene);
+		this.camera.update();
 		this.scene.update();
 	}
 }

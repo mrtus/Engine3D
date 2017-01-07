@@ -1,5 +1,7 @@
 package be.mrtus.engine.domain;
 
+import org.apache.commons.math3.util.FastMath;
+
 public class Perlin {
 
 	private final int[] p = new int[512];
@@ -40,12 +42,12 @@ public class Perlin {
 	}
 
 	public double noise(double x, double y, double z) {
-		int X = (int)Math.floor(x) & 255; // FIND UNIT CUBE THAT
-		int Y = (int)Math.floor(y) & 255; // CONTAINS POINT.
-		int Z = (int)Math.floor(z) & 255;
-		x -= Math.floor(x);                                // FIND RELATIVE X,Y,Z
-		y -= Math.floor(y);                                // OF POINT IN CUBE.
-		z -= Math.floor(z);
+		int X = (int)FastMath.floor(x) & 255; // FIND UNIT CUBE THAT
+		int Y = (int)FastMath.floor(y) & 255; // CONTAINS POINT.
+		int Z = (int)FastMath.floor(z) & 255;
+		x -= FastMath.floor(x);                                // FIND RELATIVE X,Y,Z
+		y -= FastMath.floor(y);                                // OF POINT IN CUBE.
+		z -= FastMath.floor(z);
 		double u = fade(x), // COMPUTE FADE CURVES
 				v = fade(y), // FOR EACH OF X,Y,Z.
 				w = fade(z);

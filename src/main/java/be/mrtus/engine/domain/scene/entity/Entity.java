@@ -1,6 +1,5 @@
 package be.mrtus.engine.domain.scene.entity;
 
-import be.mrtus.engine.demo.domain.Scene;
 import be.mrtus.engine.domain.render.Model;
 import be.mrtus.engine.domain.scene.entity.component.EntityController;
 import be.mrtus.engine.domain.scene.entity.component.MovableTransform;
@@ -77,8 +76,8 @@ public class Entity {
 		return this.transform instanceof MovableTransform;
 	}
 
-	public void update(Scene scene) {
-		this.controller.update(scene);
+	public void update() {
+		this.controller.update();
 		this.transform.update();
 	}
 

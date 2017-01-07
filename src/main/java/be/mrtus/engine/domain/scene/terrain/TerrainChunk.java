@@ -1,5 +1,6 @@
 package be.mrtus.engine.domain.scene.terrain;
 
+import org.apache.commons.math3.util.FastMath;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
 
@@ -12,19 +13,17 @@ public class TerrainChunk {
 	private boolean render = true;
 
 	public float calculateSmoothHeight(Vector3f position) {
-		float cx0 = (float)Math.floor(position.x);
-		float cz0 = (float)Math.floor(position.z);
-		Vector3f c0 = new Vector3f(cx0, this.heightMap[(int)cx0][(int)cz0], cz0);
-		Vector3f c1 = new Vector3f(cx0 + 1, this.heightMap[(int)cx0 + 1][(int)cz0 + 1], cz0 + 1);
+		float cx0 = (float)FastMath.abs(FastMath.floor(position.x));
+		float cz0 = (float)FastMath.abs(FastMath.floor(position.z));
+		Vector3f c0 = new Vector3f(cx0, this.getHeight(cx0, cz0), cz0);
+		Vector3f c1 = new Vector3f(cx0 + 1, this.getHeight(cx0 + 1, cz0 + 1), cz0 + 1);
 		Vector3f c05;
-		if(position.z < ((c0.x - c0.z) / (c1.x - c1.z)) * (position.x - c1.x) + c0.z) {
-			c05 = new Vector3f(cx0 + 1, this.heightMap[(int)cx0 + 1][(int)cz0], cz0);
+		if(position.z < ((((c0.x - c0.z) / (c1.x - c1.z)) * (position.x - c1.x)) + c0.z)) {
+			c05 = new Vector3f(cx0 + 1, this.getHeight(cx0 + 1, cz0), cz0);
 		} else {
-			c05 = new Vector3f(cx0, this.heightMap[(int)cx0][(int)cz0 + 1], cz0 + 1);
+			c05 = new Vector3f(cx0, this.getHeight(cx0, cz0 + 1), cz0 + 1);
 		}
-		float h = this.interpolateHeight(c0, c1, c05, position.x, position.z);
-		System.out.println(h);
-		return h;
+		return this.interpolateHeight(c0, c1, c05, position.x, position.z);
 	}
 
 	public boolean canRender() {
@@ -32,7 +31,7 @@ public class TerrainChunk {
 	}
 
 	public boolean contains(Vector3f pos) {
-		return pos.x > this.position.x && pos.z > this.position.y && pos.x < this.position.x + SIZE - 1 && pos.z < this.position.y + SIZE - 1;
+		return pos.x >= this.position.x && pos.z >= this.position.y && pos.x < this.position.x + SIZE && pos.z < this.position.y + SIZE;
 	}
 
 	public void setHeightMap(float[][] heightMap) {
@@ -52,13 +51,22 @@ public class TerrainChunk {
 	}
 
 	public void printHeightMap() {
+		String line = "";
 		for (int x = 0; x < SIZE; x++) {
-			String line = "";
 			for (int y = 0; y < SIZE; y++) {
 				line += this.heightMap[x][y] + " ";
 			}
-			System.out.println(line);
+			line += "\n";
 		}
+		line += "=====";
+		System.out.println(line);
+	}
+
+	private float getHeight(float x, float z) {
+		if(this.heightMap == null) {
+			return 0;
+		}
+		return this.heightMap[(int)x % SIZE][(int)z % SIZE];
 	}
 
 	private void setPosition(Vector2i position) {
