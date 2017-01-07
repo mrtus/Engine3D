@@ -14,15 +14,17 @@ public class TerrainChunk {
 	public float calculateSmoothHeight(Vector3f position) {
 		float cx0 = (float)Math.floor(position.x);
 		float cz0 = (float)Math.floor(position.z);
-		Vector3f c0 = new Vector3f(cx0, cz0, this.heightMap[(int)cx0][(int)cz0]);
-		Vector3f c1 = new Vector3f(cx0 + 1, cz0 + 1, this.heightMap[(int)cx0 + 1][(int)cz0 + 1]);
+		Vector3f c0 = new Vector3f(cx0, this.heightMap[(int)cx0][(int)cz0], cz0);
+		Vector3f c1 = new Vector3f(cx0 + 1, this.heightMap[(int)cx0 + 1][(int)cz0 + 1], cz0 + 1);
 		Vector3f c05;
 		if(position.z < ((c0.x - c0.z) / (c1.x - c1.z)) * (position.x - c1.x) + c0.z) {
 			c05 = new Vector3f(cx0 + 1, this.heightMap[(int)cx0 + 1][(int)cz0], cz0);
 		} else {
 			c05 = new Vector3f(cx0, this.heightMap[(int)cx0][(int)cz0 + 1], cz0 + 1);
 		}
-		return this.interpolateHeight(c0, c1, c05, position.x, position.z);
+		float h = this.interpolateHeight(c0, c1, c05, position.x, position.z);
+		System.out.println(h);
+		return h;
 	}
 
 	public boolean canRender() {
@@ -30,7 +32,7 @@ public class TerrainChunk {
 	}
 
 	public boolean contains(Vector3f pos) {
-		return pos.x > this.position.x && pos.y > this.position.y && pos.x < this.position.x + SIZE - 1 && pos.y < this.position.y + SIZE - 1;
+		return pos.x > this.position.x && pos.z > this.position.y && pos.x < this.position.x + SIZE - 1 && pos.z < this.position.y + SIZE - 1;
 	}
 
 	public void setHeightMap(float[][] heightMap) {

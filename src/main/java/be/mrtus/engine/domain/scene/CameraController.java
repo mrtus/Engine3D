@@ -9,6 +9,7 @@ import org.joml.Vector3f;
 
 public class CameraController extends EntityController<Camera> {
 
+	private final double RAD = 180 / Math.PI;
 	private final Keyboard keyboard;
 	private final Mouse mouse;
 	private final Vector3f move = new Vector3f();
@@ -25,12 +26,12 @@ public class CameraController extends EntityController<Camera> {
 		Vector3f position = this.entity.getPosition();
 		Vector3f rotation = this.entity.getTransform().getRotation();
 		if(offsetZ != 0) {
-			position.x += (float)Math.sin(Math.toRadians(rotation.y)) * -offsetZ;
-			position.z += (float)Math.cos(Math.toRadians(rotation.y)) * offsetZ;
+			position.x += (float)Math.sin(rotation.y / this.RAD) * -offsetZ;
+			position.z += (float)Math.cos(rotation.y / this.RAD) * offsetZ;
 		}
 		if(offsetX != 0) {
-			position.x += (float)Math.sin(Math.toRadians(rotation.y - 90)) * -offsetX;
-			position.z += (float)Math.cos(Math.toRadians(rotation.y - 90)) * offsetX;
+			position.x += (float)Math.sin(rotation.y - 90 / this.RAD) * -offsetX;
+			position.z += (float)Math.cos(rotation.y - 90 / this.RAD) * offsetX;
 		}
 		if(this.noclip) {
 			position.y += offsetY;
@@ -43,7 +44,7 @@ public class CameraController extends EntityController<Camera> {
 		Vector3f rotation = this.entity.getTransform().getRotation();
 		rotation.y += offsetX * 0.1;
 		rotation.x += offsetY * 0.1;
-		rotation.z += offsetZ * 0.1;
+//		rotation.z += offsetZ * 0.1;
 	}
 
 	@Override
@@ -81,6 +82,9 @@ public class CameraController extends EntityController<Camera> {
 				this.move.y = 1;
 			}
 		}
-		this.movePosition(scene, this.move.x * this.speed * this.sprint, this.move.y * this.speed * this.sprint, this.move.z * this.speed * this.sprint);
+		float moveX = this.move.x * this.speed * this.sprint;
+		float moveY = this.move.y * this.speed * this.sprint;
+		float moveZ = this.move.z * this.speed * this.sprint;
+		this.movePosition(scene, moveX, moveY, moveZ);
 	}
 }

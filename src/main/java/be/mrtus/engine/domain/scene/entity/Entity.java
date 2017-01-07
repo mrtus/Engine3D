@@ -40,9 +40,6 @@ public class Entity {
 		return this.mass;
 	}
 
-//	public boolean isMovable() {
-//		return this.transform instanceof MovableTransform;
-//	}
 	public Model getModel() {
 		return this.model;
 	}

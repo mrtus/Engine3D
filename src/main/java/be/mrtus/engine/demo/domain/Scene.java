@@ -5,6 +5,7 @@ import be.mrtus.engine.domain.render.Texture;
 import be.mrtus.engine.domain.scene.entity.Entity;
 import be.mrtus.engine.domain.scene.entity.component.Transform;
 import be.mrtus.engine.domain.scene.terrain.TerrainChunk;
+import be.mrtus.engine.domain.scene.terrain.TerrainChunk.TerrainBuilder;
 import be.mrtus.engine.domain.scene.terrain.TerrainGenerator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +47,7 @@ public class Scene {
 		}
 		IntStream.range(-16, 16).forEach(xx -> {
 			IntStream.range(-16, 16).forEach(yy -> {
-				TerrainChunk chunk = new TerrainChunk.TerrainBuilder().setPosition(xx * (TerrainChunk.SIZE - 1), yy * (TerrainChunk.SIZE - 1)).build();
+				TerrainChunk chunk = new TerrainBuilder().setPosition(xx * (TerrainChunk.SIZE - 1), yy * (TerrainChunk.SIZE - 1)).build();
 				this.terrainGenerator.generateTerrain(chunk);
 				this.chunks.add(chunk);
 			});
@@ -67,6 +68,8 @@ public class Scene {
 		TerrainChunk terrain = this.findTerrainChunkFor(position);
 		if(terrain == null) {
 			return 0;
+		} else {
+			System.out.println("chunk != null");
 		}
 		return terrain.calculateSmoothHeight(position);
 	}
