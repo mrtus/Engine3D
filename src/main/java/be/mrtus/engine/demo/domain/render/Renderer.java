@@ -72,11 +72,13 @@ public class Renderer implements KeyListener {
 	}
 
 	public void render(Display display, Camera camera, Scene scene, float alpha) {
+		this.clear();
 		if(display.isResized()) {
+			GL11.glViewport(0, 0, display.getWidth(), display.getHeight());
 			this.transformation.setProjectionMatrix(this.FOV, display.getWidth(), display.getHeight(), this.Z_NEAR, this.Z_FAR);
 		}
 		this.transformation.setViewMatrix(camera);
-		this.renderScene(scene);
+		this.renderScene(scene, camera);
 	}
 
 	public void renderModel(Model model, List<Entity> entities) {
@@ -93,10 +95,9 @@ public class Renderer implements KeyListener {
 	}
 
 	public void update() {
-
 	}
 
-	private void renderScene(Scene scene) {
+	private void renderScene(Scene scene, Camera camera) {
 		if(this.showWireFrame) {
 			GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_LINE);
 		}
@@ -107,7 +108,7 @@ public class Renderer implements KeyListener {
 
 		this.terrainShaderProgram.bind();
 		this.terrainShaderProgram.setUniform("projectionMatrix", this.transformation.getProjectionMatrix());
-		scene.getChunks().forEach(c -> this.renderTerrain(c));
+		scene.findNearbyChunks(camera.getPosition()).forEach(c -> this.renderTerrain(c));
 		this.terrainShaderProgram.unbind();
 		if(this.showWireFrame) {
 			GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_FILL);

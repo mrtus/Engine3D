@@ -146,7 +146,7 @@ public class Display {
 		this.setFullscreen(!this.fullscreen);
 	}
 
-	public void update() {
+	public void render() {
 		if(this.isResized()) {
 			this.setResized(false);
 		}

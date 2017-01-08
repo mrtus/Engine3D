@@ -65,6 +65,21 @@ public class TerrainChunk {
 		return this.position;
 	}
 
+	private boolean between(int x, int x1, float p) {
+		return x1 > p && p >= x;
+	}
+
+	private float getHeight(int x, int z) {
+		if(this.heightMap == null) {
+			return 0;
+		}
+		return this.heightMap[x][z];
+	}
+
+	private void setPosition(Vector2i position) {
+		this.position = position;
+	}
+
 	public void printHeightMap() {
 		String line = "";
 		for (int x = 0; x < this.heightMap.length; x++) {
@@ -75,21 +90,6 @@ public class TerrainChunk {
 		}
 		line += "=====";
 		System.out.println(line);
-	}
-
-	private void setPosition(Vector2i position) {
-		this.position = position;
-	}
-
-	private boolean between(int x, int x1, float p) {
-		return x1 > p && p >= x;
-	}
-
-	private float getHeight(int x, int z) {
-		if(this.heightMap == null) {
-			return 0;
-		}
-		return this.heightMap[x][z];
 	}
 
 	private boolean inside(int x, int z, int x1, int z1, Vector3f pos) {

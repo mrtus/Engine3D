@@ -9,13 +9,21 @@ import be.mrtus.engine.domain.input.Keyboard;
 import be.mrtus.engine.domain.input.Mouse;
 import be.mrtus.engine.domain.scene.Camera;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 
 public class DemoGame implements Game {
 
 	public static void main(String[] args) {
 		new GameEngine(new DemoGame(), "GameEngine 3D", 800, 600, false, false).start();
+
+//		Vector3f pos = new Vector3f(0, 0, 0);
+//		Vector3f rot = new Vector3f(0, -90 - 35, 0);
+//		Vector3f obj = new Vector3f(-10, 0, 0);
+//		float x = (float)(FastMath.cos(FastMath.toRadians(rot.x)) * FastMath.cos(FastMath.toRadians(rot.y)));
+//		float y = (float)(FastMath.sin(FastMath.toRadians(rot.x)) * FastMath.cos(FastMath.toRadians(rot.y)));
+//		float z = (float)FastMath.sin(FastMath.toRadians(rot.y));
+//		System.out.println(obj.negate(pos).normalize().dot(x, y, z));
 	}
+
 	private Camera camera;
 	private Display display;
 	private Keyboard keyboard;
@@ -49,6 +57,7 @@ public class DemoGame implements Game {
 		this.mouse = mouse;
 		this.scene = new Scene();
 		this.camera = new Camera(this.keyboard, this.mouse, this.scene);
+		this.scene.setCamera(this.camera);
 		this.renderer = new Renderer();
 		this.keyboard.addKeyListener(this.renderer);
 		this.renderer.init(this.display);
@@ -74,10 +83,6 @@ public class DemoGame implements Game {
 
 	@Override
 	public void render(float alpha) {
-		this.renderer.clear();
-		if(this.display.isResized()) {
-			GL11.glViewport(0, 0, this.display.getWidth(), this.display.getHeight());
-		}
 		this.renderer.render(this.display, this.camera, this.scene, alpha);
 	}
 

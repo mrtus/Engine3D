@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>org.joml</groupId>
 			<artifactId>joml</artifactId>
-			<version>1.6.8</version>
+			<version>1.9.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.l33tlabs.twl</groupId>

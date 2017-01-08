@@ -91,7 +91,7 @@ public class GameEngine implements Runnable, KeyListener {
 	private void render(float alpha) {
 		this.game.render(alpha);
 		this.timer.updateFPS();
-		this.display.update();
+		this.display.render();
 	}
 
 	private void toggleFullscreen() {
