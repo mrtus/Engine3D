@@ -46,7 +46,7 @@ public class Scene {
 					//					.controller(new SpinningEntityController(1f))
 					.build());
 		}
-		int chunkRad = 2;
+		int chunkRad = 16;
 		IntStream.range(-chunkRad, chunkRad).forEach(xx -> {
 			IntStream.range(-chunkRad, chunkRad).forEach(yy -> {
 				TerrainChunk chunk = new TerrainBuilder().setPosition(xx * (TerrainChunk.SIZE - 1), yy * (TerrainChunk.SIZE - 1)).build();
