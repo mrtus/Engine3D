@@ -30,6 +30,12 @@ public class Transformation {
 		return this.viewMatrix.mul(this.modelViewMatrix, this.emptyMatrix.identity());
 	}
 
+	public Matrix4f getModelViewMatrix(Vector3f pos) {
+		this.modelViewMatrix.identity()
+				.translate(pos);
+		return this.viewMatrix.mul(this.modelViewMatrix, this.emptyMatrix.identity());
+	}
+
 	public Matrix4f getModelViewMatrix(Vector2i position) {
 		this.modelViewMatrix.identity()
 				.translate(position.x, 0, position.y);

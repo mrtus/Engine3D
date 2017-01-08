@@ -18,10 +18,10 @@ public class TerrainChunk {
 		Vector3f c0 = new Vector3f(cx0, this.getHeight(cx0, cz0), cz0);
 		Vector3f c1 = new Vector3f(cx0 + 1, this.getHeight(cx0 + 1, cz0 + 1), cz0 + 1);
 		Vector3f c05;
-		if(position.z < ((((c0.x - c0.z) / (c1.x - c1.z)) * (position.x - c1.x)) + c0.z)) {
-			c05 = new Vector3f(cx0 + 1, this.getHeight(cx0 + 1, cz0), cz0);
-		} else {
+		if(position.z < ((((c0.z - c1.z) / (c0.x - c1.x)) * (position.x - c1.x)) + c1.z)) {
 			c05 = new Vector3f(cx0, this.getHeight(cx0, cz0 + 1), cz0 + 1);
+		} else {
+			c05 = new Vector3f(cx0 + 1, this.getHeight(cx0 + 1, cz0), cz0);
 		}
 		return this.interpolateHeight(c0, c1, c05, position.x, position.z);
 	}

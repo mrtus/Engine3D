@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import org.apache.commons.math3.util.FastMath;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
@@ -76,6 +77,16 @@ public class Renderer implements KeyListener {
 			this.transformation.setProjectionMatrix(this.FOV, display.getWidth(), display.getHeight(), this.Z_NEAR, this.Z_FAR);
 		}
 		this.transformation.setViewMatrix(camera);
+
+		this.shaderProgram.bind();
+		this.shaderProgram.setUniform("projectionMatrix", this.transformation.getProjectionMatrix());
+		Model model = camera.getModel();
+		model.startRender();
+		Matrix4f modelViewMatrix = this.transformation.getModelViewMatrix(new Vector3f(0f, -2.3f, 0f).add(camera.getTransform().getPosition()));
+		this.shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+		model.render();
+		model.endRender();
+		this.shaderProgram.unbind();
 		this.renderScene(scene);
 	}
 
