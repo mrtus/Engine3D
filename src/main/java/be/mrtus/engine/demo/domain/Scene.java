@@ -46,8 +46,9 @@ public class Scene {
 					//					.controller(new SpinningEntityController(1f))
 					.build());
 		}
-		IntStream.range(0, 1).forEach(xx -> {
-			IntStream.range(0, 2).forEach(yy -> {
+		int chunkRad = 2;
+		IntStream.range(-chunkRad, chunkRad).forEach(xx -> {
+			IntStream.range(-chunkRad, chunkRad).forEach(yy -> {
 				TerrainChunk chunk = new TerrainBuilder().setPosition(xx * (TerrainChunk.SIZE - 1), yy * (TerrainChunk.SIZE - 1)).build();
 				this.terrainGenerator.generateTerrain(chunk);
 				this.chunks.add(chunk);
@@ -70,6 +71,8 @@ public class Scene {
 		if(terrain == null) {
 			return 0;
 		}
+//		Vector2i pos = terrain.getPosition();
+//		System.out.println("(" + pos.x + ", " + pos.y + ") | (" + (pos.x + TerrainChunk.SIZE - 1) + ", " + (pos.y + TerrainChunk.SIZE - 1) + ")" + " | (" + position.x + ", " + position.z + ")");
 		return terrain.calculateSmoothHeight(position);
 	}
 

@@ -12,9 +12,36 @@ public class TerrainChunk {
 	private Vector2i position;
 	private boolean render = true;
 
+	public float calculateSmoothHeights(Vector3f position) {
+		int cx0 = (int)(FastMath.floor(position.x) % (SIZE - 1));
+		int cz0 = (int)(FastMath.floor(position.z) % (SIZE - 1));
+		if(position.x < 0) {
+			cx0 += 40;
+		}
+		if(position.z < 0) {
+			cz0 += 40;
+		}
+		Vector3f c0 = new Vector3f(cx0, this.getHeight(cx0, cz0), cz0);
+		Vector3f c1 = new Vector3f(cx0 + 1, this.getHeight(cx0 + 1, cz0 + 1), cz0 + 1);
+		Vector3f c05;
+		if(cz0 < ((((c0.z - c1.z) / (c0.x - c1.x)) * (cx0 - c1.x)) + c1.z)) {
+			c05 = new Vector3f(cx0, this.getHeight(cx0, cz0 + 1), cz0 + 1);
+		} else {
+			c05 = new Vector3f(cx0 + 1, this.getHeight(cx0 + 1, cz0), cz0);
+		}
+		float h = this.interpolateHeight(c0, c1, c05, position.x, position.z);
+		return h;
+	}
+
 	public float calculateSmoothHeight(Vector3f position) {
 		float cx0 = (float)FastMath.abs(FastMath.floor(position.x));
 		float cz0 = (float)FastMath.abs(FastMath.floor(position.z));
+		if(position.x < 0) {
+			cx0 += 40;
+		}
+		if(position.z < 0) {
+			cz0 += 40;
+		}
 		Vector3f c0 = new Vector3f(cx0, this.getHeight(cx0, cz0), cz0);
 		Vector3f c1 = new Vector3f(cx0 + 1, this.getHeight(cx0 + 1, cz0 + 1), cz0 + 1);
 		Vector3f c05;
@@ -31,11 +58,16 @@ public class TerrainChunk {
 	}
 
 	public boolean contains(Vector3f pos) {
-		return pos.x >= this.position.x && pos.z >= this.position.y && pos.x < this.position.x + SIZE && pos.z < this.position.y + SIZE;
+		return this.between(this.position.x, this.position.y, this.position.x + SIZE - 1, this.position.y + SIZE - 1, pos);
+	}
+
+	private boolean between(float x, float z, float x1, float z1, Vector3f pos) {
+		return x1 > pos.x && pos.x >= x && z1 > pos.z && pos.z >= z;
 	}
 
 	public void setHeightMap(float[][] heightMap) {
 		this.heightMap = heightMap;
+//		this.printHeightMap();
 	}
 
 	public TerrainModel getModel() {
@@ -50,11 +82,15 @@ public class TerrainChunk {
 		return this.position;
 	}
 
+	private void setPosition(Vector2i position) {
+		this.position = position;
+	}
+
 	public void printHeightMap() {
 		String line = "";
-		for (int x = 0; x < SIZE; x++) {
-			for (int y = 0; y < SIZE; y++) {
-				line += this.heightMap[x][y] + " ";
+		for (int x = 0; x < this.heightMap.length; x++) {
+			for (int y = 0; y < this.heightMap.length; y++) {
+				line += this.heightMap[y][x] + " ";
 			}
 			line += "\n";
 		}
@@ -67,10 +103,6 @@ public class TerrainChunk {
 			return 0;
 		}
 		return this.heightMap[(int)x % SIZE][(int)z % SIZE];
-	}
-
-	private void setPosition(Vector2i position) {
-		this.position = position;
 	}
 
 	private float interpolateHeight(Vector3f pA, Vector3f pB, Vector3f pC, float x, float z) {

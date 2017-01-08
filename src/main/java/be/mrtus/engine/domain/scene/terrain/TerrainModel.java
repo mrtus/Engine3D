@@ -129,9 +129,19 @@ public class TerrainModel {
 //				colours[i] = random.nextFloat();
 //				colours[i + 1] = random.nextFloat();
 //				colours[i + 2] = random.nextFloat();
-				colours[i] = positions[i + 1] * rgb;
-				colours[i + 1] = positions[i + 1] * rgb;
-				colours[i + 2] = positions[i + 1] * rgb;
+//				colours[i] = positions[i + 1] * rgb;
+//				colours[i + 1] = positions[i + 1] * rgb;
+//				colours[i + 2] = positions[i + 1] * rgb;
+				float h = positions[i + 1];
+				if(h >= 0 && h <= 32) {
+					colours[i] = 0.0f;
+					colours[i + 1] = h / 32f;
+					colours[i + 2] = 1.0f - (h / 32f);
+				} else if(h > 32 && h <= 64) {
+					colours[i] = (h - 31f) / 32f;
+					colours[i + 1] = 1.0f - ((h - 31f) / 32f);
+					colours[i + 2] = 0.0f;
+				}
 			}
 			return colours;
 		}

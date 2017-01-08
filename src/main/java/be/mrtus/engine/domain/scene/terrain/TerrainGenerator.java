@@ -45,13 +45,22 @@ public class TerrainGenerator {
 
 	private float[][] calculateHeights(TerrainChunk chunk) {
 		float[][] heightMap = new float[TerrainChunk.SIZE + SMOOTH_RADIUS * 2][TerrainChunk.SIZE + SMOOTH_RADIUS * 2];
-		for (int x = 0; x < heightMap.length; x++) {
-			for (int y = 0; y < heightMap.length; y++) {
-				int xReal = chunk.getPosition().x + x - 1;
-				int yReal = chunk.getPosition().y + y - 1;
-				heightMap[x][y] = this.calculateHeight(xReal, yReal);
+		for (int x = -SMOOTH_RADIUS; x < TerrainChunk.SIZE + SMOOTH_RADIUS; x++) {
+			for (int y = -SMOOTH_RADIUS; y < TerrainChunk.SIZE + SMOOTH_RADIUS; y++) {
+				int xReal = chunk.getPosition().x + x;
+				int yReal = chunk.getPosition().y + y;
+				heightMap[x + SMOOTH_RADIUS][y + SMOOTH_RADIUS] = this.calculateHeight(xReal, yReal);
 			}
 		}
+//		String line = "";
+//		for (int x = 0; x < heightMap.length; x++) {
+//			for (int y = 0; y < heightMap.length; y++) {
+//				line += heightMap[x][y] + " ";
+//			}
+//			line += "\n";
+//		}
+//		line += "=====s";
+//		System.out.println(line);
 		return heightMap;
 	}
 
