@@ -6,6 +6,10 @@ import org.joml.Vector3f;
 
 public class TerrainChunk {
 
+	public static int calculateChunkPosition(float val) {
+		return (int)FastMath.floor(val / (TerrainChunk.SIZE)) * TerrainChunk.SIZE;
+	}
+
 	public static final int SIZE = 40;
 	private float[][] heightMap;
 	private TerrainModel model;
@@ -15,16 +19,16 @@ public class TerrainChunk {
 	public float calculateSmoothHeight(Vector3f position) {
 		int cx0 = (int)FastMath.floor(position.x);
 		int cz0 = (int)FastMath.floor(position.z);
-		int x = cx0 % (SIZE);
-		int z = cz0 % (SIZE);
+		int x = cx0 % SIZE;
+		int z = cz0 % SIZE;
 		if(position.x <= 0) {
-			x += (SIZE);
+			x += SIZE;
 			if(x == 40) {
 				x = 0;
 			}
 		}
 		if(position.z <= 0) {
-			z += (SIZE);
+			z += SIZE;
 			if(z == 40) {
 				z = 0;
 			}
@@ -65,21 +69,6 @@ public class TerrainChunk {
 		return this.position;
 	}
 
-	private boolean between(int x, int x1, float p) {
-		return x1 > p && p >= x;
-	}
-
-	private float getHeight(int x, int z) {
-		if(this.heightMap == null) {
-			return 0;
-		}
-		return this.heightMap[x][z];
-	}
-
-	private void setPosition(Vector2i position) {
-		this.position = position;
-	}
-
 	public void printHeightMap() {
 		String line = "";
 		for (int x = 0; x < this.heightMap.length; x++) {
@@ -90,6 +79,21 @@ public class TerrainChunk {
 		}
 		line += "=====";
 		System.out.println(line);
+	}
+
+	private void setPosition(Vector2i position) {
+		this.position = position;
+	}
+
+	private boolean between(int x, int x1, float p) {
+		return x1 > p && p >= x;
+	}
+
+	private float getHeight(int x, int z) {
+		if(this.heightMap == null) {
+			return 0;
+		}
+		return this.heightMap[x][z];
 	}
 
 	private boolean inside(int x, int z, int x1, int z1, Vector3f pos) {
@@ -123,7 +127,4 @@ public class TerrainChunk {
 		}
 	}
 
-	public static int calculateChunkPosition(float val) {
-		return (int)FastMath.floor(val / (TerrainChunk.SIZE)) * TerrainChunk.SIZE;
-	}
 }
