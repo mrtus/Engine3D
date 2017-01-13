@@ -19,9 +19,9 @@ public class Hud {
 		this.display = display;
 		this.scene = scene;
 		this.timer = timer;
-		TextEntity test = new TextEntity("Test", this.fontFile, COL, ROW);
-		test.setPosition(0, 0);
-		this.entities.add(test);
+//		TextEntity test = new TextEntity("Test", this.fontFile, COL, ROW);
+//		test.setPosition(0, 0);
+//		this.entities.add(test);
 	}
 
 	public List<TextEntity> getEntities() {

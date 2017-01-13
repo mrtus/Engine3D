@@ -8,10 +8,7 @@ import be.mrtus.engine.domain.scene.entity.component.Transform;
 import be.mrtus.engine.domain.scene.terrain.TerrainChunk;
 import be.mrtus.engine.domain.scene.terrain.TerrainChunk.TerrainBuilder;
 import be.mrtus.engine.domain.scene.terrain.TerrainGenerator;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.apache.commons.math3.util.FastMath;
@@ -54,7 +51,7 @@ public class Scene {
 //		int chunkRad = 16;
 //		IntStream.range(-chunkRad, chunkRad).forEach(xx -> {
 //			IntStream.range(-chunkRad, chunkRad).forEach(yy -> {
-//				TerrainChunk chunk = new TerrainBuilder().setPosition(xx * (TerrainChunk.SIZE - 1), yy * (TerrainChunk.SIZE - 1)).build();
+//				TerrainChunk chunk = new TerrainBuilder().setPosition(xx * (TerrainChunk.SIZE), yy * (TerrainChunk.SIZE)).build();
 //				this.terrainGenerator.generateTerrain(chunk);
 //				this.chunks.add(chunk);
 //			});
@@ -111,32 +108,29 @@ public class Scene {
 	public void update() {
 		this.entities.forEach(Entity::update);
 		if(this.generateTerrainCount++ % 10 == 0) {
-			this.generateChunksAroundPlayer();
+			this.findChunksAroundPlayer();
 			this.generateTerrainCount = 0;
 		}
 	}
 
 	private TerrainChunk findTerrainChunkFor(Vector3f position) {
-		return this.chunks.stream().filter(c -> c.contains(position)).findFirst().orElse(null);
+		return this.chunks.stream().filter(c -> c.contains(position)).findFirst().orElseGet(() -> {
+			TerrainChunk chunk = new TerrainBuilder()
+					.setPosition(TerrainChunk.calculateChunkPosition(position.x), TerrainChunk.calculateChunkPosition(position.z))
+					.build();
+			this.terrainGenerator.generateTerrain(chunk);
+			this.chunks.add(chunk);
+			return chunk;
+		});
 	}
 
-	private void generateChunksAroundPlayer() {
+	private void findChunksAroundPlayer() {
 		int chunkRad = 8;
 		IntStream.range(-chunkRad, chunkRad).forEach(x -> {
 			IntStream.range(-chunkRad, chunkRad).forEach(y -> {
 				Vector3f pos = this.camera.getPosition();
-				int a = (int)FastMath.floor(pos.x / (TerrainChunk.SIZE - 1));
-				int b = (int)FastMath.floor(pos.z / (TerrainChunk.SIZE - 1));
-				int xx = (a + x) * (TerrainChunk.SIZE - 1);
-				int yy = (b + y) * (TerrainChunk.SIZE - 1);
-				this.emptyVector.zero();
-				this.emptyVector.add(xx, 0, yy);
-				TerrainChunk chunk = this.findTerrainChunkFor(this.emptyVector);
-				if(chunk == null) {
-					chunk = new TerrainBuilder().setPosition(xx, yy).build();
-					this.terrainGenerator.generateTerrain(chunk);
-					this.chunks.add(chunk);
-				}
+				pos.add(x * (TerrainChunk.SIZE), 0, y * (TerrainChunk.SIZE), this.emptyVector);
+				this.findTerrainChunkFor(this.emptyVector);
 			});
 		});
 	}

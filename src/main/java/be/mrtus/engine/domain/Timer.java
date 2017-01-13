@@ -42,7 +42,7 @@ public class Timer {
 			this.ups = this.upsCount;
 			this.upsCount = 0;
 			this.timeCount = 0;
-//			System.out.println("FPS: " + this.fps + " | UPS: " + this.ups);
+			System.out.println("FPS: " + this.fps + " | UPS: " + this.ups);
 		}
 	}
 

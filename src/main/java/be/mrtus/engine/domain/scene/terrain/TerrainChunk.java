@@ -6,7 +6,7 @@ import org.joml.Vector3f;
 
 public class TerrainChunk {
 
-	public static final int SIZE = 41;
+	public static final int SIZE = 40;
 	private float[][] heightMap;
 	private TerrainModel model;
 	private Vector2i position;
@@ -15,16 +15,16 @@ public class TerrainChunk {
 	public float calculateSmoothHeight(Vector3f position) {
 		int cx0 = (int)FastMath.floor(position.x);
 		int cz0 = (int)FastMath.floor(position.z);
-		int x = cx0 % (SIZE - 1);
-		int z = cz0 % (SIZE - 1);
+		int x = cx0 % (SIZE);
+		int z = cz0 % (SIZE);
 		if(position.x <= 0) {
-			x += (SIZE - 1);
+			x += (SIZE);
 			if(x == 40) {
 				x = 0;
 			}
 		}
 		if(position.z <= 0) {
-			z += (SIZE - 1);
+			z += (SIZE);
 			if(z == 40) {
 				z = 0;
 			}
@@ -45,7 +45,7 @@ public class TerrainChunk {
 	}
 
 	public boolean contains(Vector3f pos) {
-		return this.inside(this.position.x, this.position.y, this.position.x + (SIZE - 1), this.position.y + (SIZE - 1), pos);
+		return this.inside(this.position.x, this.position.y, this.position.x + SIZE, this.position.y + SIZE, pos);
 	}
 
 	public void setHeightMap(float[][] heightMap) {
@@ -121,5 +121,9 @@ public class TerrainChunk {
 			this.position.set(x, y);
 			return this;
 		}
+	}
+
+	public static int calculateChunkPosition(float val) {
+		return (int)FastMath.floor(val / (TerrainChunk.SIZE)) * TerrainChunk.SIZE;
 	}
 }
