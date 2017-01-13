@@ -1,5 +1,6 @@
 package be.mrtus.engine.demo.domain.render;
 
+import be.mrtus.engine.demo.domain.Hud;
 import be.mrtus.engine.demo.domain.Scene;
 import be.mrtus.engine.domain.Display;
 import be.mrtus.engine.domain.input.KeyListener;
@@ -22,6 +23,7 @@ public class Renderer implements KeyListener {
 	private final float FOV = (float)FastMath.toRadians(60.0f);
 	private final float Z_FAR = 1000.f;
 	private final float Z_NEAR = 0.01f;
+	private ShaderProgram hudShaderProgram;
 	private ShaderProgram shaderProgram;
 	private boolean showWireFrame = false;
 	private ShaderProgram terrainShaderProgram;
@@ -57,7 +59,16 @@ public class Renderer implements KeyListener {
 		this.terrainShaderProgram.createUniform("projectionMatrix");
 		this.terrainShaderProgram.createUniform("modelViewMatrix");
 
+		this.hudShaderProgram = new ShaderProgram();
+		this.hudShaderProgram.createVertexShader(this.loadResource("/shaders/hud/vertex.vs"));
+		this.hudShaderProgram.createFragmentShader(this.loadResource("/shaders/hud/fragment.fs"));
+		this.hudShaderProgram.link();
+		this.hudShaderProgram.createUniform("projectionModelMatrix");
+		this.hudShaderProgram.createUniform("colour");
+		this.hudShaderProgram.createUniform("texture_sampler");
+
 		this.transformation.setProjectionMatrix(this.FOV, display.getWidth(), display.getHeight(), this.Z_NEAR, this.Z_FAR);
+		this.transformation.setOrthoProjectionMatrix(0, display.getWidth(), display.getHeight(), 0);
 	}
 
 	@Override
@@ -71,14 +82,16 @@ public class Renderer implements KeyListener {
 		return new String(Files.readAllBytes(Paths.get(Renderer.class.getResource(fileName).toURI())));
 	}
 
-	public void render(Display display, Camera camera, Scene scene, float alpha) {
+	public void render(Display display, Camera camera, Scene scene, Hud hud, float alpha) {
 		this.clear();
 		if(display.isResized()) {
 			GL11.glViewport(0, 0, display.getWidth(), display.getHeight());
 			this.transformation.setProjectionMatrix(this.FOV, display.getWidth(), display.getHeight(), this.Z_NEAR, this.Z_FAR);
+			this.transformation.setOrthoProjectionMatrix(0, display.getWidth(), display.getHeight(), 0);
 		}
 		this.transformation.setViewMatrix(camera);
 		this.renderScene(scene, camera);
+		this.renderHud(hud);
 	}
 
 	public void renderModel(Model model, List<Entity> entities) {
@@ -95,6 +108,20 @@ public class Renderer implements KeyListener {
 	}
 
 	public void update() {
+	}
+
+	private void renderHud(Hud hud) {
+		this.hudShaderProgram.bind();
+		hud.getEntities().forEach(e -> {
+			Model model = e.getModel();
+			model.startRender();
+			Matrix4f projectionModelMatrix = this.transformation.getOrthoProjectionModelViewMatrix(e.getTransform().getPosition());
+			this.hudShaderProgram.setUniform("projectionModelMatrix", projectionModelMatrix);
+//			this.hudShaderProgram.setUniform("colour", new Vector3f(1f, 1f, 1f));
+			model.render();
+			model.endRender();
+		});
+		this.hudShaderProgram.unbind();
 	}
 
 	private void renderScene(Scene scene, Camera camera) {

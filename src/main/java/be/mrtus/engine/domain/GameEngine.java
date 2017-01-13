@@ -78,7 +78,7 @@ public class GameEngine implements Runnable, KeyListener {
 		this.display.init();
 		this.timer.init();
 		this.initInput();
-		this.game.init(this.display, this.keyboard, this.mouse);
+		this.game.init(this.display, this.keyboard, this.mouse, this.timer);
 		this.game.initKeyboardKeys();
 		this.game.initMouseButtons();
 	}

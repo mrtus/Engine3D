@@ -1,10 +1,12 @@
 package be.mrtus.engine.demo;
 
+import be.mrtus.engine.demo.domain.Hud;
 import be.mrtus.engine.demo.domain.Scene;
 import be.mrtus.engine.demo.domain.render.Renderer;
 import be.mrtus.engine.domain.Display;
 import be.mrtus.engine.domain.Game;
 import be.mrtus.engine.domain.GameEngine;
+import be.mrtus.engine.domain.Timer;
 import be.mrtus.engine.domain.input.Keyboard;
 import be.mrtus.engine.domain.input.Mouse;
 import be.mrtus.engine.domain.scene.Camera;
@@ -26,10 +28,12 @@ public class DemoGame implements Game {
 
 	private Camera camera;
 	private Display display;
+	private Hud hud;
 	private Keyboard keyboard;
 	private Mouse mouse;
 	private Renderer renderer;
 	private Scene scene;
+	private Timer timer;
 
 	public DemoGame() {
 	}
@@ -51,7 +55,7 @@ public class DemoGame implements Game {
 	}
 
 	@Override
-	public void init(Display display, Keyboard keyboard, Mouse mouse) throws Exception {
+	public void init(Display display, Keyboard keyboard, Mouse mouse, Timer timer) throws Exception {
 		this.display = display;
 		this.keyboard = keyboard;
 		this.mouse = mouse;
@@ -61,6 +65,8 @@ public class DemoGame implements Game {
 		this.renderer = new Renderer();
 		this.keyboard.addKeyListener(this.renderer);
 		this.renderer.init(this.display);
+		this.timer = timer;
+		this.hud = new Hud(this.display, this.timer, this.scene);
 	}
 
 	@Override
@@ -83,7 +89,7 @@ public class DemoGame implements Game {
 
 	@Override
 	public void render(float alpha) {
-		this.renderer.render(this.display, this.camera, this.scene, alpha);
+		this.renderer.render(this.display, this.camera, this.scene, this.hud, alpha);
 	}
 
 	@Override

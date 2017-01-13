@@ -7,11 +7,14 @@ import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL30;
 
 public class Texture {
 
+	private int height;
 	private int textureId = 0;
+	private int width;
 
 	public Texture() {
 	}
@@ -19,6 +22,8 @@ public class Texture {
 	public Texture(String file) {
 		try {
 			PNGDecoder decoder = new PNGDecoder(Texture.class.getResourceAsStream(file));
+			this.width = decoder.getWidth();
+			this.height = decoder.getHeight();
 			ByteBuffer buf = ByteBuffer.allocateDirect(4 * decoder.getWidth() * decoder.getHeight());
 			decoder.decode(buf, decoder.getWidth() * 4, Format.RGBA);
 			buf.flip();
@@ -35,7 +40,19 @@ public class Texture {
 		}
 	}
 
+	public void destroy() {
+		GL15.glDeleteBuffers(this.textureId);
+	}
+
+	public int getHeight() {
+		return this.height;
+	}
+
 	public int getId() {
 		return this.textureId;
+	}
+
+	public int getWidth() {
+		return this.width;
 	}
 }

@@ -28,6 +28,10 @@ public class Model {
 
 		GL30.glBindVertexArray(0);
 		GL30.glDeleteVertexArrays(this.vaoId);
+
+		if(this.texture != null) {
+			this.texture.destroy();
+		}
 	}
 
 	public void endRender() {

@@ -21,6 +21,7 @@ public class Scene {
 
 	private Camera camera;
 	private final List<TerrainChunk> chunks = new ArrayList<>();
+	private final Vector3f emptyVector = new Vector3f();
 	private final List<Entity> entities = new ArrayList<>();
 	private final Map<Model, List<Entity>> entityModels = new HashMap<>();
 	private int generateTerrainCount = 0;
@@ -80,6 +81,7 @@ public class Scene {
 
 	public void destroy() {
 		this.terrainGenerator.destroy();
+		this.entityModels.keySet().forEach(k -> k.destroy());
 	}
 
 	public List<TerrainChunk> findNearbyChunks(Vector3f position) {
@@ -120,7 +122,6 @@ public class Scene {
 
 	private void generateChunksAroundPlayer() {
 		int chunkRad = 8;
-		Vector3f vec = new Vector3f();
 		IntStream.range(-chunkRad, chunkRad).forEach(x -> {
 			IntStream.range(-chunkRad, chunkRad).forEach(y -> {
 				Vector3f pos = this.camera.getPosition();
@@ -128,9 +129,9 @@ public class Scene {
 				int b = (int)FastMath.floor(pos.z / (TerrainChunk.SIZE - 1));
 				int xx = (a + x) * (TerrainChunk.SIZE - 1);
 				int yy = (b + y) * (TerrainChunk.SIZE - 1);
-				vec.zero();
-				vec.add(xx, 0, yy);
-				TerrainChunk chunk = this.findTerrainChunkFor(vec);
+				this.emptyVector.zero();
+				this.emptyVector.add(xx, 0, yy);
+				TerrainChunk chunk = this.findTerrainChunkFor(this.emptyVector);
 				if(chunk == null) {
 					chunk = new TerrainBuilder().setPosition(xx, yy).build();
 					this.terrainGenerator.generateTerrain(chunk);

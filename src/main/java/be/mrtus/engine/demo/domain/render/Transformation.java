@@ -11,6 +11,7 @@ public class Transformation {
 
 	private final Matrix4f emptyMatrix;
 	private final Matrix4f modelViewMatrix;
+	private final Matrix4f orthoMatrix;
 	private final Matrix4f projectionMatrix;
 	private final Matrix4f viewMatrix;
 
@@ -19,6 +20,7 @@ public class Transformation {
 		this.modelViewMatrix = new Matrix4f();
 		this.viewMatrix = new Matrix4f();
 		this.emptyMatrix = new Matrix4f();
+		this.orthoMatrix = new Matrix4f();
 	}
 
 	public Matrix4f getModelViewMatrix(Transform transform) {
@@ -34,6 +36,10 @@ public class Transformation {
 		this.modelViewMatrix.identity()
 				.translate(position.x, 0, position.y);
 		return this.viewMatrix.mul(this.modelViewMatrix, this.emptyMatrix.identity());
+	}
+
+	public Matrix4f getOrthoProjectionMatrix() {
+		return this.orthoMatrix;
 	}
 
 	public Matrix4f getProjectionMatrix() {
@@ -52,7 +58,18 @@ public class Transformation {
 				.translate(-position.x, -position.y, -position.z);
 	}
 
+	public void setOrthoProjectionMatrix(float left, float right, float bottom, float top) {
+		this.orthoMatrix.identity();
+		this.orthoMatrix.setOrtho2D(left, right, bottom, top);
+	}
+
 	public void setProjectionMatrix(float fov, float width, float height, float zNear, float zFar) {
 		this.projectionMatrix.identity().perspective(fov, width / height, zNear, zFar);
+	}
+
+	public Matrix4f getOrthoProjectionModelViewMatrix(Vector3f position) {
+		this.viewMatrix.identity()
+				.translate(position.x, position.y, 0);
+		return this.viewMatrix.mul(this.orthoMatrix, this.emptyMatrix.identity());
 	}
 }
