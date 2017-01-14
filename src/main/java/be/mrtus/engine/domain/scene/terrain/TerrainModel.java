@@ -38,6 +38,14 @@ public class TerrainModel {
 		GL30.glBindVertexArray(0);
 	}
 
+	public int[] getIndices() {
+		return this.indices;
+	}
+
+	public float[] getPositions() {
+		return this.positions;
+	}
+
 	public void init() {
 		if(!this.initiated) {
 			this.initiated = true;

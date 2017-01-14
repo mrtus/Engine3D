@@ -101,12 +101,18 @@ public class OBJLoader {
 		int[] indicesArr = indices.stream().mapToInt((Integer v) -> v).toArray();
 //		String posline = "";
 //		for (int o = 0; o < posArr.length; o++) {
+//			if(o % 100 == 0) {
+//				posline += "\n";
+//			}
 //			posline += posArr[o] + "f, ";
 //		}
 //		System.out.println(posline);
 //		System.out.println("==========");
 //		String indicesLine = "";
 //		for (int o = 0; o < indicesArr.length; o++) {
+//			if(o % 100 == 0) {
+//				indicesLine += "\n";
+//			}
 //			indicesLine += indicesArr[o] + ", ";
 //		}
 //		System.out.println(indicesLine);

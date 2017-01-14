@@ -10,7 +10,7 @@ public class TerrainChunk {
 		return (int)FastMath.floor(val / TerrainChunk.SIZE) * TerrainChunk.SIZE;
 	}
 
-	public static final int SIZE = 40;
+	public static final int SIZE = 32;
 	private float[][] heightMap;
 	private TerrainModel model;
 	private Vector2i position;
