@@ -37,7 +37,7 @@ public class CameraController extends EntityController<Camera> {
 		}
 		if(this.noclip) {
 			position.y += offsetY;
-		} else if(offsetX != 0 || offsetZ != 0 || offsetY != 0) {
+		} else {
 //			float height = this.scene.calculateTerrainHeight(position) + 1.80f;
 //			if(position.y < height) {
 //				position.y = height;
@@ -53,6 +53,8 @@ public class CameraController extends EntityController<Camera> {
 //		rotation.z += offsetZ * 0.1;
 	}
 
+	private boolean previousNoClip = false;
+
 	@Override
 	public void update() {
 		if(this.keyboard.isKeyPressed("reset_pos")) {
@@ -63,8 +65,11 @@ public class CameraController extends EntityController<Camera> {
 		} else {
 			this.sprint = 1;
 		}
-		if(this.keyboard.isKeyPressed("noclip")) {
+		if(this.keyboard.isKeyPressed("noclip") && !this.previousNoClip) {
 			this.noclip = !this.noclip;
+			this.previousNoClip = true;
+		} else {
+			this.previousNoClip = false;
 		}
 
 		Vector2f deltaPos = this.mouse.getDeltaPos();

@@ -4,6 +4,7 @@ import be.mrtus.engine.domain.render.Model;
 import be.mrtus.engine.domain.render.Texture;
 import be.mrtus.engine.domain.scene.Camera;
 import be.mrtus.engine.domain.scene.entity.Entity;
+import be.mrtus.engine.domain.scene.entity.component.MovableTransform;
 import be.mrtus.engine.domain.scene.entity.component.Transform;
 import be.mrtus.engine.domain.scene.terrain.TerrainChunk;
 import be.mrtus.engine.domain.scene.terrain.TerrainChunk.TerrainBuilder;
@@ -23,6 +24,7 @@ public class Scene {
 	private final Map<Model, List<Entity>> entityModels = new HashMap<>();
 	private int generateTerrainCount = 0;
 	private final TerrainGenerator terrainGenerator;
+	private final Vector3f gravity = new Vector3f(0.0f, -9.81f, 0.0f);
 
 	public Scene() {
 		this.terrainGenerator = new TerrainGenerator("seed");
@@ -56,8 +58,6 @@ public class Scene {
 //				this.chunks.add(chunk);
 //			});
 //		});
-
-		this.findTerrainChunkFor(new Vector3f(1, 0, 1));
 	}
 
 	public void addEntity(Entity entity) {
@@ -84,8 +84,8 @@ public class Scene {
 	}
 
 	public List<TerrainChunk> findNearbyChunks(Vector3f position) {
-//		return this.findNearbyChunks(position, 262144);
-		return this.findNearbyChunks(position, 100000);
+		return this.findNearbyChunks(position, 409600);
+//		return this.findNearbyChunks(position, 100000);
 	}
 
 	public List<TerrainChunk> findNearbyChunks(Vector3f position, int range) {
@@ -109,7 +109,14 @@ public class Scene {
 	}
 
 	public void update() {
-		this.entities.forEach(Entity::update);
+		((MovableTransform)this.camera.getTransform()).applyForce(this.gravity);
+		this.entities.forEach(e -> {
+			if(e.isMovable()) {
+				MovableTransform tr = (MovableTransform)e.getTransform();
+				tr.applyForce(this.gravity);
+			}
+			e.update();
+		});
 		if(this.generateTerrainCount++ % 10 == 0) {
 			this.findChunksAroundPlayer();
 			this.generateTerrainCount = 0;
@@ -128,9 +135,9 @@ public class Scene {
 	}
 
 	private void findChunksAroundPlayer() {
-		int chunkRad = 1;
-		IntStream.range(-chunkRad + 1, chunkRad).forEach(x -> {
-			IntStream.range(-chunkRad + 1, chunkRad).forEach(y -> {
+		int chunkRad = 16;
+		IntStream.range(-chunkRad, chunkRad).forEach(x -> {
+			IntStream.range(-chunkRad, chunkRad).forEach(y -> {
 				Vector3f pos = this.camera.getPosition();
 				pos.add(x * (TerrainChunk.SIZE), 0, y * (TerrainChunk.SIZE), this.emptyVector);
 				this.findTerrainChunkFor(this.emptyVector);

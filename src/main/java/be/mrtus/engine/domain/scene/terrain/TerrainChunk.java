@@ -21,15 +21,15 @@ public class TerrainChunk {
 		int cz0 = (int)FastMath.floor(position.z);
 		int x = cx0 % SIZE;
 		int z = cz0 % SIZE;
-		if(position.x <= 0) {
+		if(position.x < 0) {
 			x += SIZE;
-			if(x == 40) {
+			if(x == SIZE) {
 				x = 0;
 			}
 		}
-		if(position.z <= 0) {
+		if(position.z < 0) {
 			z += SIZE;
-			if(z == 40) {
+			if(z == SIZE) {
 				z = 0;
 			}
 		}
@@ -44,10 +44,6 @@ public class TerrainChunk {
 		return this.interpolateHeight(c01, c0011, c10, position.x, position.z);
 	}
 
-	private float calculateDiagonalZCoordinate(float x1, float z1, float x2, float z2, float x) {
-		return ((z1 - z2) / (x1 - x2)) * (x - x1) + z1;
-	}
-
 	public boolean canRender() {
 		return this.model != null && this.render;
 	}
@@ -59,8 +55,6 @@ public class TerrainChunk {
 	public void setHeightMap(float[][] heightMap) {
 		this.heightMap = heightMap;
 //		this.printHeightMap();
-		System.out.println("Pos height: " + this.calculateSmoothHeight(new Vector3f(1.0f, 0f, 1.0f)));
-		System.out.println(new Vector3f(1.0f, -1.0f, 1.0f).lerp(new Vector3f(2.0f, -0.5f, 2.0f), 0.5f));
 	}
 
 	public TerrainModel getModel() {
@@ -75,21 +69,6 @@ public class TerrainChunk {
 		return this.position;
 	}
 
-	private boolean between(int x, int x1, float p) {
-		return x1 > p && p >= x;
-	}
-
-	private float getHeight(int x, int z) {
-		if(this.heightMap == null) {
-			return 0.0f;
-		}
-		return this.heightMap[x][z];
-	}
-
-	private void setPosition(Vector2i position) {
-		this.position = position;
-	}
-
 	public void printHeightMap() {
 		String line = "";
 		for (int x = 0; x < this.heightMap.length; x++) {
@@ -100,6 +79,25 @@ public class TerrainChunk {
 		}
 		line += "=====";
 		System.out.println(line);
+	}
+
+	private void setPosition(Vector2i position) {
+		this.position = position;
+	}
+
+	private boolean between(int x, int x1, float p) {
+		return x1 > p && p >= x;
+	}
+
+	private float calculateDiagonalZCoordinate(float x1, float z1, float x2, float z2, float x) {
+		return ((z1 - z2) / (x1 - x2)) * (x - x1) + z1;
+	}
+
+	private float getHeight(int x, int z) {
+		if(this.heightMap == null) {
+			return 0.0f;
+		}
+		return this.heightMap[x][z];
 	}
 
 	private boolean inside(int x, int z, int x1, int z1, Vector3f pos) {

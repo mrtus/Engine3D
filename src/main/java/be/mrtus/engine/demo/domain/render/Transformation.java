@@ -34,6 +34,7 @@ public class Transformation {
 
 	public Matrix4f getModelViewMatrix(Vector2i position) {
 		this.modelViewMatrix.identity()
+				//								.scale(0.5f, 0.5f, 0.5f)
 				.translate(position.x, 0, position.y);
 		return this.viewMatrix.mul(this.modelViewMatrix, this.emptyMatrix.identity());
 	}

@@ -22,11 +22,10 @@ public class MovableTransform extends Transform {
 	}
 
 	public void applyForce(Vector3f force) {
-		Vector3f forceCopy = new Vector3f(force);
 		if(this.entity.getMass() != 0) {
-			forceCopy.div((float)this.entity.getMass());
+			this.acceleration.add(force.div((float)this.entity.getMass(), new Vector3f()));
 		}
-		this.acceleration.add(forceCopy);
+		this.acceleration.add(force);
 	}
 
 	public void evade(Entity target) {
