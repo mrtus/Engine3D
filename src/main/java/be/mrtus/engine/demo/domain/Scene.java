@@ -27,7 +27,7 @@ public class Scene {
 	private final Vector3f gravity = new Vector3f(0.0f, -9.81f, 0.0f);
 
 	public Scene() {
-		this.terrainGenerator = new TerrainGenerator("seed");
+		this.terrainGenerator = new TerrainGenerator("lalalall");
 		float x = 0;
 		float y = 0;
 		Model cubeModel = new Model.ModelBuilder()
@@ -50,14 +50,6 @@ public class Scene {
 					//					.controller(new SpinningEntityController(1f))
 					.build());
 		}
-//		int chunkRad = 16;
-//		IntStream.range(-chunkRad, chunkRad).forEach(xx -> {
-//			IntStream.range(-chunkRad, chunkRad).forEach(yy -> {
-//				TerrainChunk chunk = new TerrainBuilder().setPosition(xx * (TerrainChunk.SIZE), yy * (TerrainChunk.SIZE)).build();
-//				this.terrainGenerator.generateTerrain(chunk);
-//				this.chunks.add(chunk);
-//			});
-//		});
 	}
 
 	public void addEntity(Entity entity) {

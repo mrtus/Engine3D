@@ -63,19 +63,10 @@ public class TerrainGenerator {
 				heightMap[x + SMOOTHING][y + SMOOTHING] = this.calculateHeight(xReal, yReal);
 			}
 		}
-//		String line = "";
-//		for (int x = 0; x < heightMap.length; x++) {
-//			for (int y = 0; y < heightMap.length; y++) {
-//				line += heightMap[x][y] + " ";
-//			}
-//			line += "\n";
-//		}
-//		line += "=====s";
-//		System.out.println(line);
 		return heightMap;
 	}
 
-	private float[][] generateHeightsForChunk(float[][] heightMap) {
+	private float[][] generateHeightMap(float[][] heightMap) {
 		float[][] smoothHeightMap = new float[CHUNK_SIZE][CHUNK_SIZE];
 		for (int x = SMOOTHING; x < CHUNK_SIZE + SMOOTHING; x++) {
 			for (int y = SMOOTHING; y < CHUNK_SIZE + SMOOTHING; y++) {
@@ -96,14 +87,14 @@ public class TerrainGenerator {
 	}
 
 	private void generateTerrainChunk(TerrainChunk chunk) {
-		float[][] heightMap = this.calculateHeights(chunk.getPosition().x, chunk.getPosition().y);
+		float[][] heights = this.calculateHeights(chunk.getPosition().x, chunk.getPosition().y);
 		for (int i = 0; i < SMOOTHING / 2; i++) {
-			heightMap = this.smoothHeights(heightMap);
+			heights = this.smoothHeights(heights);
 		}
-		heightMap = this.generateHeightsForChunk(heightMap);
-		TerrainModel model = this.generateTerrainModel(heightMap);
+		heights = this.generateHeightMap(heights);
+		TerrainModel model = this.generateTerrainModel(heights);
 		chunk.setModel(model);
-		chunk.setHeightMap(heightMap);
+		chunk.setHeightMap(heights);
 	}
 
 	private TerrainModel generateTerrainModel(float[][] heightMap) {
