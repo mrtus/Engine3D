@@ -56,6 +56,8 @@ public class Scene {
 //				this.chunks.add(chunk);
 //			});
 //		});
+
+		this.findTerrainChunkFor(new Vector3f(1, 0, 1));
 	}
 
 	public void addEntity(Entity entity) {
@@ -82,6 +84,7 @@ public class Scene {
 	}
 
 	public List<TerrainChunk> findNearbyChunks(Vector3f position) {
+//		return this.findNearbyChunks(position, 262144);
 		return this.findNearbyChunks(position, 100000);
 	}
 
@@ -125,9 +128,9 @@ public class Scene {
 	}
 
 	private void findChunksAroundPlayer() {
-		int chunkRad = 8;
-		IntStream.range(-chunkRad, chunkRad).forEach(x -> {
-			IntStream.range(-chunkRad, chunkRad).forEach(y -> {
+		int chunkRad = 1;
+		IntStream.range(-chunkRad + 1, chunkRad).forEach(x -> {
+			IntStream.range(-chunkRad + 1, chunkRad).forEach(y -> {
 				Vector3f pos = this.camera.getPosition();
 				pos.add(x * (TerrainChunk.SIZE), 0, y * (TerrainChunk.SIZE), this.emptyVector);
 				this.findTerrainChunkFor(this.emptyVector);

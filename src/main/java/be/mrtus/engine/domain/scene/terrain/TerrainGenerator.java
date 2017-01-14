@@ -86,6 +86,7 @@ public class TerrainGenerator {
 
 	private void generateTerrainChunk(TerrainChunk chunk) {
 		float[][] smoothHeightMap = this.calculateSmoothHeights(this.calculateHeights(chunk));
+//		float[][] smoothHeightMap = this.calculateHeights(chunk);
 		TerrainModel model = this.generateTerrainModel(smoothHeightMap);
 		chunk.setModel(model);
 		chunk.setHeightMap(smoothHeightMap);

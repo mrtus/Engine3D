@@ -37,7 +37,11 @@ public class CameraController extends EntityController<Camera> {
 		}
 		if(this.noclip) {
 			position.y += offsetY;
-		} else if(offsetX != 0 || offsetZ != 0) {
+		} else if(offsetX != 0 || offsetZ != 0 || offsetY != 0) {
+//			float height = this.scene.calculateTerrainHeight(position) + 1.80f;
+//			if(position.y < height) {
+//				position.y = height;
+//			}
 			position.y = this.scene.calculateTerrainHeight(position) + 1.80f;
 		}
 	}
