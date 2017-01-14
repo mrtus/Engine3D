@@ -106,8 +106,8 @@ public class TerrainGenerator {
 		int nOctave = 200;
 		int result = 0;
 		float frequence256 = 0.5f; // wider landscape ...
-		int sx = (int)((x) * frequence256);
-		int sy = (int)((z) * frequence256);
+		int sx = (int)(x * frequence256);
+		int sy = (int)(z * frequence256);
 		int octave = nOctave;
 		while (octave != 0) {
 			int bX = sx & 0xFF;
